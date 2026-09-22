@@ -1,0 +1,1234 @@
+SELECT *
+FROM   [dbo].[employee];
+
+-- where condition 
+SELECT *
+FROM   users
+WHERE  age = 21;
+
+-- Order BY 
+SELECT   *
+FROM     users
+ORDER BY name ASC, age DESC;
+
+--Group BY 
+SELECT   company,
+         count(name) AS people_work_there
+FROM     users
+GROUP BY company
+ORDER BY people_work_there DESC;
+
+SELECT   gender,
+         count(name) AS counts
+FROM     users
+GROUP BY gender;
+
+SELECT *
+FROM   users;
+
+SELECT   company,
+         COUNT(name) AS NumberOfEmployees
+FROM     users
+GROUP BY company
+ORDER BY COUNT(name) DESC
+OFFSET 1 ROWS FETCH NEXT 1 ROWS ONLY;
+
+SELECT *
+FROM   [dbo].[employee];
+
+SELECT   department,
+         count(job_title) AS JOB_Avalablibity
+FROM     employee
+GROUP BY department
+ORDER BY JOB_Avalablibity DESC;
+
+SELECT *
+FROM   employee;
+
+SELECT   department,
+         round(avg(salary), 1) AS "avg_sal"
+FROM     employee
+WHERE    salary > 100000
+GROUP BY department;
+
+SELECT TOP 1 salary
+FROM   employee
+WHERE  salary < (SELECT max(salary)
+                 FROM   employee);
+
+SELECT *
+FROM   employee;
+
+DELETE employee
+WHERE  emp_id = 102;
+
+SELECT   TOP 1 department,
+               sum(salary) AS TotalSalary
+FROM     employee
+WHERE    salary < (SELECT max(salary)
+                   FROM   employee)
+GROUP BY department
+ORDER BY TotalSalary DESC;
+
+-- OPERATOR
+SELECT *
+FROM   employee
+WHERE  department = 'tech'
+       AND salary > 50000; -- For AND Operator both of the condition should be true 
+
+SELECT *
+FROM   employee
+WHERE  NOT fname = 'Diya';
+
+SELECT *
+FROM   employee
+WHERE  salary BETWEEN 50000 AND 100000
+       AND department = 'tech';
+
+SELECT *
+FROM   employee
+WHERE  department IN ('tech', 'management');
+
+SELECT *
+FROM   employee
+WHERE  department NOT IN ('tech', 'management');
+
+SELECT *
+FROM   employee
+WHERE  fname LIKE 'A%';
+
+SELECT *
+FROM   employee
+WHERE  fname LIKE '__A%';
+
+SELECT *
+FROM   ESALE;
+
+SELECT *
+FROM   orders;
+
+USE model;
+
+-- Combining Data
+SELECT brand
+FROM   ESALE
+INTERSECT
+SELECT brand
+FROM   orders;
+
+-- funtions --
+SELECT *,
+       LOWER(CONCAT(fname, ' ', lname)) AS 'Full Name'
+FROM   employee;
+
+SELECT hire_date
+FROM   employee;
+
+SELECT fname,
+       len(fname) AS 'length',
+       LEN(trim(fname)) AS 'len trim name',
+       len(fname) - LEN(trim(fname)) AS flag
+FROM   employee;
+
+SELECT hire_date,
+       REPLACE(hire_date, '-', '') AS 'New Hire Date'
+FROM   employee;
+
+SELECT fname,
+       LOWER(LEFT(fname, 2)) AS f2
+FROM   employee;
+
+SELECT fname,
+       SUBSTRING(fname, 2, len(fname)) AS f3
+FROM   employee;
+
+SELECT *
+FROM   issue_tracker;
+
+--Finding the 2nd highest time taken for a tickeet 
+SELECT max(DATEDIFF(day, requested_at, solved_at)) AS '2nd highest Time Taken'
+FROM   issue_tracker
+WHERE  DATEDIFF(day, requested_at, solved_at) < (SELECT max(DATEDIFF(day, requested_at, solved_at))
+                                                 FROM   issue_tracker);
+
+--
+SELECT *
+FROM   issue_tracker;
+
+SELECT day(requested_at) AS Date_day,
+       month(requested_at) AS Month_day
+FROM   issue_tracker;
+
+SELECT requested_at,
+       eomonth(requested_at) AS week_day,
+       '01 jan ' AS first_day
+FROM   issue_tracker;
+
+--how many request are solved each year 
+SELECT *
+FROM   issue_tracker;
+
+SELECT   year(solved_at) AS solved_Year,
+         count([status]) AS Total_request
+FROM     issue_tracker
+WHERE    status = 'unsolved'
+GROUP BY year(solved_at);
+
+--How many requests are resolved in each month 
+SELECT   datename(MONTH, solved_at) AS Month_name,
+         count(status) AS Numbe_Of_Results
+FROM     issue_tracker
+WHERE    [status] = 'unsolved'
+         AND month(solved_at) = 2
+GROUP BY datename(MONTH, solved_at);
+
+SELECT *
+FROM   issue_tracker
+WHERE  month(solved_at) = 2;
+
+--format and casting 
+SELECT requested_at,
+       FORMAT(requested_at, 'dd/MM/yyyy') AS 'New Date'
+FROM   issue_tracker;
+
+SELECT format(getdate(), 'dd/MM/yyyy') AS 'today date',
+       requested_at,
+       FORMAT(requested_at, 'D') AS 'New Date'
+FROM   issue_tracker;
+
+SELECT CAST (requested_at AS DATE) AS 'new Date'
+FROM   issue_tracker;
+
+SELECT CONVERT (DATE, requested_at) AS 'new date'
+FROM   issue_tracker;
+
+--Date Calculation 
+SELECT requested_at,
+       DATEADD(year, 2, requested_at) AS 'new date'
+FROM   issue_tracker;
+
+SELECT requested_at,
+       DATEADD(MONTH, 2, requested_at) AS 'new date'
+FROM   issue_tracker;
+
+SELECT [status],
+       requested_at,
+       solved_at,
+       datediff(YEAR, requested_at, solved_at) AS 'Time Taken'
+FROM   issue_tracker;
+
+SELECT count(DISTINCT (author))
+FROM   issue_tracker;
+
+--Find the age from now of the request which are not solved 
+SELECT solved_at,
+       getdate() AS 'Today date',
+       datediff(year, solved_at, getdate()) AS 'Age of the Request'
+FROM   issue_tracker
+WHERE  [status] = 'unsolved';
+
+--Find the Average Time taken to solve the issue 
+SELECT *
+FROM   issue_tracker;
+
+SELECT FORMAT(requested_at, 'yyyy/MM/dd') AS requested_at,
+       datediff(YEAR, requested_at, solved_at) AS 'Time Taken'
+FROM   issue_tracker
+WHERE  [status] = 'solved';
+
+SELECT *
+FROM   issue_tracker;
+ 
+--Time Gap Analysis
+SELECT author,
+       requested_at AS 'current date',
+       LAG(requested_at) OVER (ORDER BY requested_at) AS 'prev Day',
+       DATEDIFF(day, LAG(requested_at) OVER (ORDER BY requested_at), requested_at) AS 'Request Interval'
+FROM   issue_tracker;
+
+
+SELECT * from issue_tracker
+where ISNULL(requested_at,N/A)
+
+
+select author_id,coalesce(stars,0)
+from issue_tracker
+order by stars asc
+
+select *
+from issue_tracker
+where stars is not null and solved_at is NOT NULL and requested_at is NOT NULL
+
+ 
+--CASE WHEN Statement 
+select day(solved_at) as 'day', 
+CASE WHEN day(solved_at) <10 THEN 'quick' 
+ELSE 'late'
+END as 'status'
+from issue_tracker
+
+-- select * from orders
+select brand ,SUM(quantity * selling_price) AS total_sales,
+CASE 
+WHEN SUM(quantity * selling_price) < 500000 THEN 'Bad SALE'
+WHEN SUM(quantity * selling_price) < 1000000 then 'Avg SALE'
+else 'Blukbuster SALE'
+End as 'catagory'
+from orders
+GROUP BY brand
+order by total_sales Desc
+
+select * from employee
+
+select emp_id , fname ,lname ,gender,
+case 
+  when gender = 'M' then 'MALE'
+  else 'FEMALE'
+  end as 'Full Gender'
+  
+from employee
+
+--Conditional Aggregation 
+
+SELECT *  from orders
+
+
+select brand,COUNT(brand) as 'Nummer of Orders',
+sum(selling_price*quantity) as sell,
+case 
+  when sum(selling_price*quantity) <100000 then 'this is low'
+  else 'this is high'
+  end as 'catagory'
+from orders
+group by brand
+HAVING SUM(selling_price * quantity) >= 100000;
+
+--Aggregation Function 
+
+select * from orders 
+
+SELECT * from employee
+
+select id, count(*) as total_orders ,
+sum(selling_price),
+avg(selling_price),
+MAX(selling_price),
+MIN(selling_price)
+from orders
+GROUP by id
+
+--W I N D O W Function -- 
+
+select brand,PLATFORM,sku,
+sum(selling_price * quantity) OVER(PARTITION BY brand)
+from orders  
+-- group by brand 
+
+SELECT fname , salary
+from employee
+
+SELECT department, city ,
+sum(salary) over (PARTITION BY department) as TotalSalary,
+sum(salary) over (PARTITION BY city ORDER BY salary desc) as TotalSalary_by_city
+
+from employee
+
+
+
+select * from issue_tracker 
+
+
+
+
+select brand,Ranking from (
+SELECT  DISTINCT (brand) , dense_rank() over (order by Total_sell desc) as Ranking from 
+(select 
+brand,
+sum(selling_price * quantity) over (PARTITION BY brand) as Total_sell
+from orders) as t ) as t 
+where Ranking =2 
+
+
+
+SELECT author , coalesce(ticket_type,'N/A') as withoutzero from issue_tracker
+
+SELECT * from issue_tracker
+
+--185. Department Top Three Salaries- 
+select Department,Employee,salary from (
+SELECT d.name as Department  , e.name as Employee , e.salary as salary, 
+DENSE_RANK() over (PARTITION BY d.name order by e.salary)as ranking 
+from emp as e
+left join Department as d 
+on e.departmentId  = d.id ) as t 
+where ranking <= 3
+--using CTE 
+with cte as (
+select d.name as Department,e.name as Employee,salary,
+dense_rank () over (partition by d.name order by salary desc) as ranking 
+from Employee  as e 
+left join department as d 
+on 
+e.departmentId  = d.id  )
+
+select Department,Employee,salary 
+from cte  where ranking <=3
+
+
+
+--window aggregate function -- 
+SELECT * from orders 
+
+select brand , quantity , 
+count(quantity)over (PARTITION BY brand) as total_quant
+from orders 
+
+SELECT id ,check_pk from (
+select id,
+COUNT(id) over (PARTITION BY id ) as check_pk
+from orders) as t
+where check_pk > 1
+
+select * from employee
+
+select Department, salary ,
+round(avg(salary)over(partition by department),2) as sales_by_department 
+from employee
+
+SELECT Department,salary from (
+select department ,coalesce( salary,0) as salary,
+avg(coalesce( salary,0) ) over(PARTITION BY department) as avg_sal
+from employee)as t
+where salary > avg_sal
+
+select department ,coalesce( salary,0) as salary,
+avg(coalesce( salary,0) ) over(PARTITION BY department) as avg_sal
+from employee
+
+select Department, coalesce(salary,0),
+min(coalesce(salary,0))over ( PARTITION BY department) as lowest_salary,
+max(coalesce(salary,0))over (partition by department)as highest_salary
+from employee
+
+select * from (
+select fname ,lname ,department ,coalesce(salary,0) as salary ,
+max(coalesce(salary,0)) over (PARTITION BY department) as highest_salary_by_department
+from employee) as t 
+where salary = highest_salary_by_department
+
+select * from emp;
+select * from Department
+
+
+select * from (
+select d.name as department, e.name as employee, e.salary ,
+max(e.salary) over ( PARTITION BY d.name) as highest_salary_by_department 
+from emp as e   
+left join Department as d  
+on e.departmentId = d.id ) as T
+where salary = highest_salary_by_department
+
+-- 1907. Count Salary Categories -- 
+select 'low salary' as category,
+sum (case when salary < 65000 then 1 else 0 end ) as accounts_count
+from emp  
+union all 
+select 'average salary' as category,
+sum (case when salary between 65000 and 70000 then 1 else 0 end ) as accounts_count
+from emp 
+union all 
+select 'hightest salary ' as category,
+sum (case when salary > 70000 then 1 else 0 end ) accounts
+from emp  
+
+select * from queue 
+
+select * from Queue
+order by turn asc
+
+
+
+select top 1 person_name from (
+select
+ turn ,
+ weight,person_name,
+sum(weight ) over ( order BY turn ) as total_weight
+from Queue) as t 
+where total_weight <=1000
+order by turn DESC
+
+select * from Emp
+
+-- Ranking Function -- 
+
+select Brand , sum(quantity*selling_price)total_sell,
+rank()over (order by sum(quantity*selling_price)) as ranking,
+ROW_NUMBER() over ( order by sum(quantity*selling_price)) as row_numbers 
+from orders 
+group by brand
+
+
+
+select brand,selling_price,
+ROW_NUMBER() over (order by selling_price) as row_numbees,
+rank() over ( order by selling_price ) ranking ,
+dense_rank() over ( order by selling_price  )den_ranking 
+
+from orders 
+
+
+select max(selling_price) from orders
+
+SELECT * from (
+select brand, selling_price,
+ROW_NUMBER() over(partition by brand order by selling_price desc) as ranking 
+from orders ) as t 
+where ranking =1 
+
+select top 2 brand,total_sell from (
+select brand , sum ( selling_price* quantity) as total_sell ,
+ROW_NUMBER() over (order by sum ( selling_price* quantity) asc)  as rank
+from orders 
+group by brand) as t 
+
+use model 
+SELECT * from orders 
+
+
+select brand, selling_price,
+ROW_NUMBER() over ( partition by brand ORDER BY selling_price)
+from orders 
+
+
+
+select brand, selling_price,
+rank() over ( PARTITION BY brand ORDER BY selling_price)
+from orders 
+
+select brand, selling_price,
+dense_rank() over (PARTITION BY brand  ORDER BY selling_price)
+from orders 
+SELECT * from emp
+
+select fname, coalesce (salary,0),
+NTILE(1) over ( ORDER BY coalesce (salary,0)) as one_bucket,
+NTILE(2) over ( ORDER BY coalesce (salary,0)) as two_bucket,
+NTILE(3) over ( ORDER BY coalesce (salary,0)) as three_bucket,
+NTILE(4) over ( ORDER BY coalesce (salary,0)) as four_bucket
+
+from employee 
+
+select * from emp 
+select * from Department
+
+select salary , concat(salary , '%') as 'salary%' from emp 
+
+
+select * from issue_tracker 
+
+
+SELECT month(requested_at) as month , selling_price from issue_tracker 
+
+SELECT * from [dbo].[users]
+
+select author ,solved_at, coalesce( day (solved_at),0) from issue_tracker
+
+select * from issue_tracker
+
+
+
+select * from (
+select  author ,
+ROW_NUMBER() over (PARTITION BY author order by author) as raniking 
+from issue_tracker) as  t 
+where raniking =1
+
+select * from issue_tracker
+where author ='Tuyết Trần'
+
+--find the happy customer from the table where  the average time taken to solve a tiket is lesser than other with respect to the ticket count
+select author , 'HAPPY CUSTOMER' AS [HAPPY CUSTOMER] from (
+select author , timesstaken,tiket_count,
+dense_rank() over (order by timesstaken)as raking 
+from (
+select author , count(ticket_type) as tiket_count,
+avg(DATEDIFF(day , requested_at , solved_at)) as timesstaken
+from issue_tracker
+where status = 'solved'
+group by author) as y)  as t
+where tiket_count > timesstaken
+
+--PRACTICE -- Calculate the Experience of the Employees from the Hire Date 
+SELECT fname,(todays_date - hire_date ) as exp from (
+select fname,year(hire_date) as hire_date,
+year(GETDATE() )as todays_date
+from employee) as t 
+
+
+select * from orders
+
+
+select * from (
+select brand , selling_price,
+round (avg(selling_price) over ( partition by brand),2) as avg_price
+from orders ) as t 
+where selling_price > avg_price
+
+--rank the customer on their total amount of sale -- 
+select * , DENSE_RANK() over ( order by total_sale desc) as rank
+from (
+select brand , sum(quantity*selling_price  ) total_sale
+from orders
+group by brand) as t 
+
+-- this is wrong because order by can not be use inside a subquerry, CTE , views 
+-- SELECT *, 
+-- DENSE_RANK() over ( order by salary desc ) as ranking 
+-- from (
+-- select salary from employee 
+-- ) as t 
+-- where ranking = 2 
+
+
+select * from students
+select * from Examinations
+
+
+select s.[student_id] , s.student_name,(select count(subject_name) as total_subject from Examinations) as total_subject
+from Students as s
+left join Examinations as e  
+on s.student_id = e.student_id 
+
+select  student_id,student_name, (select count(subject_name) as total_subject from Examinations) as total_subject
+from Students
+
+
+select * from employee 
+
+select fname , lname,
+avg(salary ) over (PARTITION by emp_id)
+from employee
+
+select fname , lname ,salary from employee 
+where salary > (
+select avg(salary) from employee);
+
+select avg( salary ) from employee ;
+
+--show the details of employee which are from tech department 
+
+select * from orders 
+select * from ESALE 
+
+
+SELECT * from issue_tracker
+where [stars] in  (3,  4 )
+
+
+--find the female employee whose salary is higher than the male employee 
+select fname , salary,Gender from employee
+where Gender = 'F' and salary > any (select salary from employee where Gender = 'M')
+
+
+--EXIST
+
+SELECT PLATFORM, brand 
+from orders where  NOT EXISTS( SELECT 1 from ESALE WHERE orders.sku= ESALE.sku ) \
+
+
+--CTE--
+
+select * from orders ;
+
+with sales as 
+(
+select brand , 
+sum(selling_price * quantity) total_sale 
+from orders 
+group by brand 
+)
+SELECT *,
+rank() over(order by total_sale desc) as ranking 
+from sales
+
+select * from employee
+
+SELECT fname+''+lname as full_name from employee
+
+select * from emp ;
+--1731. The Number of Employees Which Report to Each Employee using CTE
+
+with managers
+as 
+(
+select  e.employee_id,e.name,r.age
+from emp as e  
+join emp as r  
+on e.employee_id = r.reports_to
+) 
+select employee_id,name,count (*) as reports_count ,ROUND(AVG(CAST(age AS DECIMAL(10,2))), 0) AS average_age 
+from managers
+group by employee_id, name
+order by employee_id
+
+SELECT * from activity 
+--1661. Average Time of Process per Machine
+SELECT a.machine_id, round(avg(p.timestamp-a.timestamp),3) as processing_time
+from Activity as a 
+join Activity as p  
+on a.machine_id = p.machine_id
+where a.process_id  = p.process_id 
+and a.activity_type = 'start'
+and p.activity_type = 'end' 
+group by a.machine_id;
+
+
+--Recursive CTE--
+with series as 
+(
+select 1 as my_number 
+union all 
+SELECT
+my_number+1
+from series 
+where my_number < 2000
+)
+SELECT * from series
+OPTION ( maxrecursion 10000) -- option is used to controll the recurssion which is by defult 100 
+
+
+select * from emp;
+-- report the ids and the names of all managers and Level the managers based on their report countings -- 
+with cte as 
+(
+select e.employee_id ,e.name,count(r.reports_to) as reports_count,avg(r.age) as age
+from emp as e  
+inner join  emp as r  
+on e.employee_id = r.reports_to
+GROUP BY e.employee_id ,e.name,e.age
+)
+select * ,
+DENSE_RANK() over( order by reports_count desc) as ranking ,
+case when DENSE_RANK() over( order by reports_count desc) = 1 then 'LEVEL 1'
+     else 'LEVEL 2'
+end as LEVELS
+from cte 
+
+
+ select * from orders
+
+SELECT
+    brand,DATEPART(HOUR, order_created_at) AS order_hour,
+    sum(selling_price * quantity) as total_sell
+    
+FROM orders
+GROUP BY
+    brand,DATEPART(HOUR, order_created_at) 
+
+
+select * from orders ;
+
+with runninng_total as 
+(
+   select 
+     datepart(MONTH,order_date ) as order_month,
+     sum(selling_price * quantity) as total_sale,
+     count(id) as id_count,
+     sum(quantity) as totalquantity 
+     from orders 
+     GROUP BY datepart(MONTH,order_date)
+)
+SELECT
+order_month,total_sale ,id_count,totalquantity,
+sum(total_sale)over( order by order_month  )  as runing_total
+from runninng_total
+
+--Checking the existance of the View -- 
+if object_id('sale.Monthly_summary' , 'V')is NOT NULL
+drop view sale.Monthly_summary
+go
+----Creating a VIEW----
+create view sale.Monthly_summary as
+(
+select 
+datepart(MONTH,order_date ) as order_month,
+sum(selling_price * quantity) as total_sale,
+count(id) as id_count,
+sum(quantity) as totalquantity 
+from orders 
+GROUP BY datepart(MONTH,order_date)
+)
+
+SELECT
+order_month,total_sale ,id_count,totalquantity,
+sum(total_sale)over( order by order_month  )  as runing_total
+from Monthly_summary
+
+select * from [sale].[Monthly_summary]
+
+select * ,
+ROW_NUMBER() over (order by total_sale desc) as rank
+from [sale].[Monthly_summary] 
+
+
+--Write an SQL query that reports the average experience years of all the employees for each project,
+-- rounded to 2 digits.
+--Return the result table in any order.
+--The query result format is in the following example.
+
+-- Output: 
+-- +-------------+---------------+
+-- | project_id  | average_years |
+-- +-------------+---------------+
+-- | 1           | 2.00          |
+-- | 2           | 2.50          |
+-- +-------------+---------------+
+
+select * from emp2;
+select * from project 
+
+with cte as (
+select p.project_id,p.employee_id,e.name,cast(e.experience_years as float) as experience_years,cast(count(e.experience_years)over (partition by p.project_id)as float)as experience_year
+from project as p  
+right JOIN emp2 as e  
+on p.employee_id = e.employee_id 
+) 
+SELECT project_id,round(sum(experience_years)/count(experience_years),2) as average_year from cte 
+group by project_id
+order by project_id
+
+select * from orders 
+--CTAS & TEMP --(Create Table AS  &  TEMPORARY Table)
+SELECT brand,sum(quantity*selling_price) as total_sale
+into #rough_table_temp, --temporary table creation uses # 
+into rough_table -- CTAS uses only the table name 
+from orders
+GROUP BY brand
+
+-- Stored Procedure -- 
+
+-- create procedure Rank_totalsale_by_brand @ranking INT  --(@brand NVARCHAR(50) this is the parameter Declaration)
+-- as 
+-- begin 
+--       select * from 
+--       (
+--         select brand , sum(selling_price * quantity) as total_sale,
+--         DENSE_RANK() over (order by sum(selling_price * quantity)desc)as ranking 
+--         from orders
+--         GROUP BY brand 
+--       ) as t 
+-- where  ranking = @ranking
+-- end
+
+exec Rank_totalsale_by_brand @ranking = 3
+--Trigger--
+-- create TRIGGER trg_emp on Employee
+-- after INSERT 
+-- as 
+-- BEGIN
+--   INSERT into emp_log(employee_id,logMessage,logDate)
+--   select 
+--      empemployee_id,
+--      'new emp added = ' + cast(employee_id as varchar),
+--      GETDATE()
+--   from INSTEAD
+-- END
+
+-- 180. Consecutive Numbers
+
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | id          | int     |
+-- | num         | varchar |
+-- +-------------+---------+
+
+-- Input: 
+-- Logs table:
+-- +----+-----+
+-- | id | num |
+-- +----+-----+
+-- | 1  | 1   |
+-- | 2  | 1   |
+-- | 3  | 1   |
+-- | 4  | 2   |
+-- | 5  | 1   |
+-- | 6  | 2   |
+-- | 7  | 2   |
+-- +----+-----+
+-- Output: 
+-- +-----------------+
+-- | ConsecutiveNums |
+-- +-----------------+
+-- | 1               |
+-- +-----------------+
+
+select * from Logs  
+
+--CTE Approach (NOT PASSING EVERY TEST CASE)
+
+-- select *,
+-- lag(num ,1)over (order by id) as runninng_total1,
+-- lag(num ,2)over (order by id) as runninng_total2
+-- from logs 
+
+-- with cte as 
+-- (
+-- select * ,
+-- row_number() over ( order by id ) as row_number 
+-- from logs 
+-- )
+-- ,cte2 as 
+-- (
+-- SELECT * ,
+-- count(row_number)over (PARTITION BY num) as rank
+-- from cte
+-- )
+
+-- select distinct(num) as ConsecutiveNums  from cte2 
+-- where rank = (SELECT MAX(rank) FROM cte2 )
+
+--ORIGINAL APPROCH 
+
+-- with cte as 
+-- (
+-- select *,
+-- lag(num,1) over (order by id) as count1,
+-- lag(num,2) over (order by id) as count2
+-- from Logs
+-- )
+-- SELECT distinct(num) as Consecutive_Numbers from cte   
+-- where num = count1 and num=count2
+select * from products;
+--1164. Product Price at a Given Date
+with cte as (
+select * from Products 
+where change_date <= '2019-08-16'
+)
+,cte2 as (
+SELECT *
+FROM (
+    SELECT 
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY product_id 
+            ORDER BY change_date DESC
+        ) AS rn
+    FROM cte
+) t
+WHERE rn = 1)
+select distinct(Products.product_id),coalesce(cte2.new_price,10) as price  from Products
+left join cte2 on 
+Products.product_id=cte2.product_id
+
+--1204. Last Person to Fit in the Bus
+select top 1 name as person_name   from (
+select 
+    Turn,
+    person_id  as id,
+    person_name as name,
+    weight ,
+    sum(weight)over(order by Turn ) as rollsum
+from Queue) as t
+where rollsum <= 1000
+order by turn DESC
+
+
+--1907. Count Salary Categories
+select * from Accounts 
+
+-- CTE Approch 
+with cte as (
+SELECT *, 
+case 
+   WHEN income <20000 then 'Low Salary'
+   when income between 20000 and 50000 then 'Average Salary'
+   when income >50000 then 'High Salary'
+   end as category
+from Accounts
+)
+SELECT category, COUNT(category) as accounts_count from cte 
+group by category
+UNION
+select 'Average Salary' as category,  
+sum(case when income between 20000 and 50000 then 1 else 0 END ) as account_count
+from cte
+
+--UNION approach 
+
+select 'Low Salary' as category,  
+sum(case when income < 20000 then 1 else 0 END ) as account_count
+from Accounts 
+union 
+select 'Average Salary' as category,  
+sum(case when income between 20000 and 50000 then 1 else 0 END ) as account_count
+from Accounts 
+union
+select 'High Salary' as category,  
+sum(case when income >50000 then 1 else 0 END ) as account_count
+from Accounts
+
+--626. Exchange Seats--
+select * from Seat;
+
+with cte as 
+(
+select id,Student ,
+case when id%2=1 and id !=(SELECT MAX(id) FROM Seat) then id+1 -- odd Check 
+     when id%2=0 then id-1 --even check 
+else id end as new_id
+from Seat
+)
+select new_id as id ,Student
+from cte 
+order by id asc
+
+--1341. Movie Rating -- (CTE APPROACH)
+
+with cte As (
+select user_id ,movie_id ,count(rating)over (PARTITION BY user_id) as userr
+from MovieRating 
+) --end of CTE
+,cte2 as (
+select user_id,count(userr) as number_of_movies
+from cte 
+GROUP BY [user_id]
+)--end of CTE2
+,cte3 AS (
+select user_id ,number_of_movies from cte2
+where number_of_movies = (select max(number_of_movies)from cte2)
+)--end of CTE3
+,cte4 as (
+select top 1 User_leet.name as results      
+from cte3 as c3  
+left join User_leet
+on c3.user_id=user_leet.user_id
+order by name asc
+)--end of CTE4
+,cte5 as (
+select * from (
+SELECT 
+    movie_id,
+    round(AVG(CAST(rating AS DECIMAL(10,2))),2) AS avg_rating
+FROM MovieRating
+WHERE created_at >= '2020-02-01'
+  AND created_at < '2020-03-01'
+GROUP BY movie_id
+) as t 
+where avg_rating = (select max(avg_rating)from (SELECT 
+    movie_id,
+    round(AVG(CAST(rating AS DECIMAL(10,2))),2) AS avg_rating
+FROM MovieRating
+WHERE created_at >= '2020-02-01'
+  AND created_at < '2020-03-01'
+GROUP BY movie_id) as y)
+)--end of CTE 5
+,cte6 as (
+select top 1 m.title as results from Movies as m 
+right JOIN cte5 as c5  
+on m.movie_id=c5.movie_id
+ORDER BY title
+)--end of CTE6
+select * from cte6
+UNION ALL
+select * from cte4
+
+-- another approach 
+
+with cte as (
+select  top 1 name as results from (
+select u.user_id , count(u.name)as number_of_rating ,u.name
+from User_leet as u
+left join MovieRating  as mr
+on u.[user_id] = mr.[user_id]
+Group by u.user_id,u.name
+)as t 
+where number_of_rating = 
+(SELECT max(number_of_rating)from (select u.user_id , count(u.name)as number_of_rating ,u.name
+from User_leet as u
+left join MovieRating  as mr
+on u.[user_id] = mr.[user_id]
+Group by u.user_id,u.name)as u)
+order by results)
+--the name of the user who has rated the greatest number of movies
+
+,cte2 as 
+
+(
+select top 1 results from (
+select m.title as results ,round(AVG(CAST(rating AS DECIMAL(10,2))),2) AS avg_rating       
+from Movies as m    
+left join MovieRating as mr 
+on m.movie_id = mr.movie_id
+WHERE  mr.created_at >= '2020-02-01' AND mr.created_at < '2020-03-01'
+group by m.title) as t 
+where avg_rating =
+(select max(avg_rating) from (select m.title as results ,round(AVG(CAST(rating AS DECIMAL(10,2))),2) AS avg_rating       
+from Movies as m    
+left join MovieRating as mr 
+on m.movie_id = mr.movie_id
+WHERE  mr.created_at >= '2020-02-01' AND mr.created_at < '2020-03-01'
+group by m.title) as t )
+order by results
+)
+
+
+SELECT * from cte
+UNION ALL
+SELECT * from cte2
+
+--1321. Restaurant Growth-- (doubtfull) 
+
+with  everyday_total as 
+(
+select visited_on,sum(amount) total_amount from Customer
+GROUP BY visited_on
+)
+,cte2 as (
+select visited_on ,
+sum(total_amount) over (order by visited_on rows BETWEEN 6 preceding and CURRENT row) as amountSum,
+ROW_NUMBER() OVER (ORDER BY visited_on) AS Week 
+from everyday_total)
+SELECT 
+    visited_on,
+    amountSum AS amount,
+    ROUND(amountSum / 7.0, 2) AS average_amount
+FROM cte2
+WHERE Week >= 7
+ORDER BY visited_on;
+
+
+--602. Friend Requests II: Who Has the Most Friends (using sub querry)
+
+select * from [dbo].[RequestAccepted];
+
+select * from (
+select id,count(id)  as num from (
+select requester_id  as id from RequestAccepted
+union all
+select accepter_id  as id from RequestAccepted) as t 
+group by id)as t
+where num = (select max(num) from (select id,count(id)  as num from (
+select requester_id  as id from RequestAccepted
+union all
+select accepter_id  as id from RequestAccepted) as t 
+group by id) as l)
+
+--585. Investments in 2016
+select * from Insurance;
+with cte as (
+select * from (
+select * ,
+count (*) over ( PARTITION BY tiv_2015) as tiv_2015_count ,
+count (*) over ( partition by lat,lon) as count_loc
+from  Insurance) as t 
+where tiv_2015_count >1 and count_loc =1 
+) 
+select round(sum(tiv_2016),2) as tiv_2016 from cte 
+
+-- with cte as (
+-- select d.name as Department,e.name as Employee,salary from Employee  as e 
+-- left join department as d 
+-- on 
+-- e.departmentId  = d.id  )
+
+-- select  *,
+-- dense_rank () over (partition by department order by salary) as ranking 
+-- from cte 
+
+
+select * from #test 
+
+
+
+
+select top 1 max (salary) from #test  
+where salary < (select max(salary)from #test)
+
+--1484. Group Sold Products By The Date
+
+SELECT 
+    sell_date,count(product) as num_sold,
+    STRING_AGG(product, ',') WITHIN GROUP (ORDER BY product) AS products
+FROM (SELECT DISTINCT sell_date, product FROM Activities) as a
+GROUP BY sell_date;
+
+
+--SELECT * FROM Contests;
+--SELECT * FROM Colleges;
+--SELECT * FROM Challenges;
+--SELECT * FROM View_Stats;
+--SELECT * FROM Submission_Stats;
+
+select c.contest_id,c. hacker_id,c.name,
+sum(ss.total_submissions) as sums_total_submissions,
+    sum(ss.total_accepted_submissions) as total_accepted_submissions,
+    sum(v.total_views) as total_views,
+    sum(v.total_unique_views ) as total_unique_views 
+
+from  Contests as c
+join Colleges as cl -- college table 
+on 
+c.contest_id = cl.contest_id
+join Challenges as ch -- challenge 
+on 
+cl.college_id  = ch.college_id 
+left join View_Stats as v -- view status
+on ch.challenge_id = v.challenge_id 
+left join Submission_Stats as ss --Submission_Stats
+on v.challenge_id=ss.challenge_id
+group by c.contest_id,c. hacker_id,c.name
+having sum(ss.total_submissions) + 
+      sum(ss.total_accepted_submissions)+
+      sum(v.total_views)+
+      sum(v.total_unique_views ) > 0 
+order by c.contest_id
+
+ use master  
+--hacker rank interview Question 
+-- with view_stats_agg as (
+-- select challenge_id ,sum(total_views) as total_views ,
+-- sum(total_unique_views) as total_unique_views 
+-- from View_Stats
+-- group by challenge_id
+-- ),
+-- submissionagg as (
+-- select challenge_id ,
+-- sum(total_submissions) as total_submissions ,
+-- sum(total_accepted_submissions) as total_accepted_submissions
+-- from Submission_Stats
+-- group by challenge_id
+-- )
+-- select 
+--     c.contest_id,c. hacker_id,c.name,
+--     sum(ss.total_submissions) as sums_total_submissions,
+--     sum(ss.total_accepted_submissions) as total_accepted_submissions,
+--     sum(v.total_views) as total_views,
+--     sum(v.total_unique_views ) as total_unique_views 
+-- from  Contests as c
+-- join Colleges as cl -- college table 
+-- on 
+-- c.contest_id = cl.contest_id
+-- join Challenges as ch -- challenge 
+-- on 
+-- cl.college_id  = ch.college_id 
+-- left join view_stats_agg as v -- view status
+-- on 
+-- ch.challenge_id = v.challenge_id 
+-- left join submissionagg as ss --Submission_Stats
+-- on
+-- ch.challenge_id=ss.challenge_id
+-- group by c.contest_id,c. hacker_id,c.name
+-- having sum(ss.total_submissions) + 
+--       sum(ss.total_accepted_submissions)+
+--       sum(v.total_views)+
+--       sum(v.total_unique_views ) > 0 
+-- order by c.contest_id
+
+--to handle the NULL we can use coaleasce with SUM 
+
+use master 
+
+--SQL PROJECT-- (Data ware housing)
+
+select * from employee
