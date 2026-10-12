@@ -1,0 +1,1362 @@
+                                                                                
+-- Problem 0175: 175. Combine Two Tables
+-- Repository folder: 0175-combine-two-tables
+                                                                                
+
+IF OBJECT_ID(N'dbo.Person_0175', N'U') IS NOT NULL DROP TABLE dbo.[Person_0175];
+CREATE TABLE dbo.[Person_0175] (
+    [personId] INT NULL,
+    [lastName] NVARCHAR(255) NULL,
+    [firstName] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Person_0175] ([personId], [lastName], [firstName]) VALUES
+(1, N'Wang', N'Allen'),
+(2, N'Alice', N'Bob');
+
+IF OBJECT_ID(N'dbo.Address_0175', N'U') IS NOT NULL DROP TABLE dbo.[Address_0175];
+CREATE TABLE dbo.[Address_0175] (
+    [addressId] INT NULL,
+    [personId] INT NULL,
+    [city] NVARCHAR(255) NULL,
+    [state] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Address_0175] ([addressId], [personId], [city], [state]) VALUES
+(1, 2, N'New York City', N'New York'),
+(2, 3, N'Leetcode', N'California');
+
+GO
+
+--                                                                                
+-- Problem 0182: 182. Duplicate Emails
+-- Repository folder: 0182-duplicate-emails
+                                                                                
+
+IF OBJECT_ID(N'dbo.Person_0182', N'U') IS NOT NULL DROP TABLE dbo.[Person_0182];
+CREATE TABLE dbo.[Person_0182] (
+    [id] INT NULL,
+    [email] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Person_0182] ([id], [email]) VALUES
+(1, N'a@b.com'),
+(2, N'c@d.com'),
+(3, N'a@b.com');
+
+GO
+
+                                                                                
+-- Problem 0183: 183. Customers Who Never Order
+-- Repository folder: 0183-customers-who-never-order
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customers_0183', N'U') IS NOT NULL DROP TABLE dbo.[Customers_0183];
+CREATE TABLE dbo.[Customers_0183] (
+    [id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Customers_0183] ([id], [name]) VALUES
+(1, N'Joe'),
+(2, N'Henry'),
+(3, N'Sam'),
+(4, N'Max');
+
+IF OBJECT_ID(N'dbo.Orders_0183', N'U') IS NOT NULL DROP TABLE dbo.[Orders_0183];
+CREATE TABLE dbo.[Orders_0183] (
+    [id] INT NULL,
+    [customerId] INT NULL
+);
+INSERT INTO dbo.[Orders_0183] ([id], [customerId]) VALUES
+(1, 3),
+(2, 1);
+
+GO
+
+                                                                                
+-- Problem 0184: 184. Department Highest Salary
+-- Repository folder: 0184-department-highest-salary
+                                                                                
+
+IF OBJECT_ID(N'dbo.Employee_0184', N'U') IS NOT NULL DROP TABLE dbo.[Employee_0184];
+CREATE TABLE dbo.[Employee_0184] (
+    [id] INT NULL,
+    [name] NVARCHAR(255) NULL,
+    [salary] INT NULL,
+    [departmentId] INT NULL
+);
+INSERT INTO dbo.[Employee_0184] ([id], [name], [salary], [departmentId]) VALUES
+(1, N'Joe', 70000, 1),
+(2, N'Jim', 90000, 1),
+(3, N'Henry', 80000, 2),
+(4, N'Sam', 60000, 2),
+(5, N'Max', 90000, 1);
+
+IF OBJECT_ID(N'dbo.Department_0184', N'U') IS NOT NULL DROP TABLE dbo.[Department_0184];
+CREATE TABLE dbo.[Department_0184] (
+    [id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Department_0184] ([id], [name]) VALUES
+(1, N'IT'),
+(2, N'Sales');
+
+GO
+
+                                                                                
+-- Problem 0586: 586. Customer Placing the Largest Number of Orders
+-- Repository folder: 0586-customer-placing-the-largest-number-of-orders
+                                                                                
+
+IF OBJECT_ID(N'dbo.Orders_0586', N'U') IS NOT NULL DROP TABLE dbo.[Orders_0586];
+CREATE TABLE dbo.[Orders_0586] (
+    [order_number] INT NULL,
+    [customer_number] INT NULL
+);
+INSERT INTO dbo.[Orders_0586] ([order_number], [customer_number]) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 3);
+
+GO
+
+                                                                                
+-- Problem 0603: 603. Consecutive Available Seats
+-- Repository folder: 0603-consecutive-available-seats
+                                                                                
+
+IF OBJECT_ID(N'dbo.Cinema_0603', N'U') IS NOT NULL DROP TABLE dbo.[Cinema_0603];
+CREATE TABLE dbo.[Cinema_0603] (
+    [seat_id] INT NULL,
+    [free] BIT NULL
+);
+INSERT INTO dbo.[Cinema_0603] ([seat_id], [free]) VALUES
+(1, 1),
+(2, 0),
+(3, 1),
+(4, 1),
+(5, 1);
+
+GO
+
+                                                                                
+-- Problem 0607: 607. Sales Person
+-- Repository folder: 0607-sales-person
+                                                                                
+
+IF OBJECT_ID(N'dbo.SalesPerson_0607', N'U') IS NOT NULL DROP TABLE dbo.[SalesPerson_0607];
+CREATE TABLE dbo.[SalesPerson_0607] (
+    [sales_id] INT NULL,
+    [name] NVARCHAR(255) NULL,
+    [salary] INT NULL,
+    [commission_rate] INT NULL,
+    [hire_date] DATE NULL
+);
+INSERT INTO dbo.[SalesPerson_0607] ([sales_id], [name], [salary], [commission_rate], [hire_date]) VALUES
+(1, N'John', 100000, 6, N'2006-04-01'),
+(2, N'Amy', 12000, 5, N'2010-05-01'),
+(3, N'Mark', 65000, 12, N'2008-12-25'),
+(4, N'Pam', 25000, 25, N'2005-01-01'),
+(5, N'Alex', 5000, 10, N'2007-02-03');
+
+IF OBJECT_ID(N'dbo.Company_0607', N'U') IS NOT NULL DROP TABLE dbo.[Company_0607];
+CREATE TABLE dbo.[Company_0607] (
+    [com_id] INT NULL,
+    [name] NVARCHAR(255) NULL,
+    [city] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Company_0607] ([com_id], [name], [city]) VALUES
+(1, N'RED', N'Boston'),
+(2, N'ORANGE', N'New York'),
+(3, N'YELLOW', N'Boston'),
+(4, N'GREEN', N'Austin');
+
+IF OBJECT_ID(N'dbo.Orders_0607', N'U') IS NOT NULL DROP TABLE dbo.[Orders_0607];
+CREATE TABLE dbo.[Orders_0607] (
+    [order_id] INT NULL,
+    [order_date] DATE NULL,
+    [com_id] INT NULL,
+    [sales_id] INT NULL,
+    [amount] INT NULL
+);
+INSERT INTO dbo.[Orders_0607] ([order_id], [order_date], [com_id], [sales_id], [amount]) VALUES
+(1, N'2014-01-01', 3, 4, 10000),
+(2, N'2014-02-01', 4, 5, 5000),
+(3, N'2014-03-01', 1, 1, 50000),
+(4, N'2014-04-01', 1, 4, 25000);
+
+GO
+
+                                                                                
+-- Problem 0608: 608. Tree Node
+-- Repository folder: 0608-tree-node
+                                                                                
+
+IF OBJECT_ID(N'dbo.Tree_0608', N'U') IS NOT NULL DROP TABLE dbo.[Tree_0608];
+CREATE TABLE dbo.[Tree_0608] (
+    [id] INT NULL,
+    [p_id] INT NULL
+);
+INSERT INTO dbo.[Tree_0608] ([id], [p_id]) VALUES
+(1, NULL),
+(2, 1),
+(3, 1),
+(4, 2),
+(5, 2);
+
+GO
+
+                                                                                
+-- Problem 0613: 613. Shortest Distance in a Line
+-- Repository folder: 0613-shortest-distance-in-a-line
+                                                                                
+
+IF OBJECT_ID(N'dbo.Point_0613', N'U') IS NOT NULL DROP TABLE dbo.[Point_0613];
+CREATE TABLE dbo.[Point_0613] (
+    [x] INT NULL
+);
+INSERT INTO dbo.[Point_0613] ([x]) VALUES
+(-1),
+(0),
+(2);
+
+GO
+
+                                                                                
+-- Problem 1136: 1136. Actors and Directors Who Cooperated At Least Three Times
+-- Repository folder: 1136-actors-and-directors-who-cooperated-at-least-three-times
+                                                                                
+
+IF OBJECT_ID(N'dbo.ActorDirector_1136', N'U') IS NOT NULL DROP TABLE dbo.[ActorDirector_1136];
+CREATE TABLE dbo.[ActorDirector_1136] (
+    [actor_id] INT NULL,
+    [director_id] INT NULL,
+    [timestamp] INT NULL
+);
+INSERT INTO dbo.[ActorDirector_1136] ([actor_id], [director_id], [timestamp]) VALUES
+(1, 1, 0),
+(1, 1, 1),
+(1, 1, 2),
+(1, 2, 3),
+(1, 2, 4),
+(2, 1, 5),
+(2, 1, 6);
+
+GO
+
+                                                                                
+-- Problem 1163: 1163. Project Employees III
+-- Repository folder: 1163-project-employees-iii
+                                                                                
+
+IF OBJECT_ID(N'dbo.Project_1163', N'U') IS NOT NULL DROP TABLE dbo.[Project_1163];
+CREATE TABLE dbo.[Project_1163] (
+    [project_id] INT NULL,
+    [employee_id] INT NULL
+);
+INSERT INTO dbo.[Project_1163] ([project_id], [employee_id]) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 1),
+(2, 4);
+
+IF OBJECT_ID(N'dbo.Employee_1163', N'U') IS NOT NULL DROP TABLE dbo.[Employee_1163];
+CREATE TABLE dbo.[Employee_1163] (
+    [employee_id] INT NULL,
+    [name] NVARCHAR(255) NULL,
+    [experience_years] INT NULL
+);
+INSERT INTO dbo.[Employee_1163] ([employee_id], [name], [experience_years]) VALUES
+(1, N'Khaled', 3),
+(2, N'Ali', 2),
+(3, N'John', 3),
+(4, N'Doe', 2);
+
+GO
+
+                                                                                
+-- Problem 1179: 1179. Game Play Analysis I
+-- Repository folder: 1179-game-play-analysis-i
+                                                                                
+
+IF OBJECT_ID(N'dbo.Activity_1179', N'U') IS NOT NULL DROP TABLE dbo.[Activity_1179];
+CREATE TABLE dbo.[Activity_1179] (
+    [player_id] INT NULL,
+    [device_id] INT NULL,
+    [event_date] DATE NULL,
+    [games_played] INT NULL
+);
+INSERT INTO dbo.[Activity_1179] ([player_id], [device_id], [event_date], [games_played]) VALUES
+(1, 2, N'2016-03-01', 5),
+(1, 2, N'2016-05-02', 6),
+(2, 3, N'2017-06-25', 1),
+(3, 1, N'2016-03-02', 0),
+(3, 4, N'2018-07-03', 5);
+
+GO
+
+                                                                                
+-- Problem 1180: 1180. Game Play Analysis II
+-- Repository folder: 1180-game-play-analysis-ii
+                                                                                
+
+IF OBJECT_ID(N'dbo.Activity_1180', N'U') IS NOT NULL DROP TABLE dbo.[Activity_1180];
+CREATE TABLE dbo.[Activity_1180] (
+    [player_id] INT NULL,
+    [device_id] INT NULL,
+    [event_date] DATE NULL,
+    [games_played] INT NULL
+);
+INSERT INTO dbo.[Activity_1180] ([player_id], [device_id], [event_date], [games_played]) VALUES
+(1, 2, N'2016-03-01', 5),
+(1, 2, N'2016-05-02', 6),
+(2, 3, N'2017-06-25', 1),
+(3, 1, N'2016-03-02', 0),
+(3, 4, N'2018-07-03', 5);
+
+GO
+
+                                                                                
+-- Problem 1181: 1181. Game Play Analysis III
+-- Repository folder: 1181-game-play-analysis-iii
+                                                                                
+
+IF OBJECT_ID(N'dbo.Activity_1181', N'U') IS NOT NULL DROP TABLE dbo.[Activity_1181];
+CREATE TABLE dbo.[Activity_1181] (
+    [player_id] INT NULL,
+    [device_id] INT NULL,
+    [event_date] DATE NULL,
+    [games_played] INT NULL
+);
+INSERT INTO dbo.[Activity_1181] ([player_id], [device_id], [event_date], [games_played]) VALUES
+(1, 2, N'2016-03-01', 5),
+(1, 2, N'2016-05-02', 6),
+(1, 3, N'2017-06-25', 1),
+(3, 1, N'2016-03-02', 0),
+(3, 4, N'2018-07-03', 5);
+
+GO
+
+                                                                                
+-- Problem 1214: 1214. Highest Grade For Each Student
+-- Repository folder: 1214-highest-grade-for-each-student
+                                                                                
+
+IF OBJECT_ID(N'dbo.Enrollments_1214', N'U') IS NOT NULL DROP TABLE dbo.[Enrollments_1214];
+CREATE TABLE dbo.[Enrollments_1214] (
+    [student_id] INT NULL,
+    [course_id] INT NULL,
+    [grade] INT NULL
+);
+INSERT INTO dbo.[Enrollments_1214] ([student_id], [course_id], [grade]) VALUES
+(2, 2, 95),
+(2, 3, 95),
+(1, 1, 90),
+(1, 2, 99),
+(3, 1, 80),
+(3, 2, 75),
+(3, 3, 82);
+
+GO
+
+                                                                                
+-- Problem 1291: 1291. Immediate Food Delivery I
+-- Repository folder: 1291-immediate-food-delivery-i
+                                                                                
+
+IF OBJECT_ID(N'dbo.Delivery_1291', N'U') IS NOT NULL DROP TABLE dbo.[Delivery_1291];
+CREATE TABLE dbo.[Delivery_1291] (
+    [delivery_id] INT NULL,
+    [customer_id] INT NULL,
+    [order_date] DATE NULL,
+    [customer_pref_delivery_date] DATE NULL
+);
+INSERT INTO dbo.[Delivery_1291] ([delivery_id], [customer_id], [order_date], [customer_pref_delivery_date]) VALUES
+(1, 1, N'2019-08-01', N'2019-08-02'),
+(2, 5, N'2019-08-02', N'2019-08-02'),
+(3, 1, N'2019-08-11', N'2019-08-11'),
+(4, 3, N'2019-08-24', N'2019-08-26'),
+(5, 4, N'2019-08-21', N'2019-08-22'),
+(6, 2, N'2019-08-11', N'2019-08-13');
+
+GO
+
+                                                                                
+-- Problem 1339: 1339. Team Scores in Football Tournament
+-- Repository folder: 1339-team-scores-in-football-tournament
+                                                                                
+
+IF OBJECT_ID(N'dbo.Teams_1339', N'U') IS NOT NULL DROP TABLE dbo.[Teams_1339];
+CREATE TABLE dbo.[Teams_1339] (
+    [team_id] INT NULL,
+    [team_name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Teams_1339] ([team_id], [team_name]) VALUES
+(10, N'Leetcode FC'),
+(20, N'NewYork FC'),
+(30, N'Atlanta FC'),
+(40, N'Chicago FC'),
+(50, N'Toronto FC');
+
+IF OBJECT_ID(N'dbo.Matches_1339', N'U') IS NOT NULL DROP TABLE dbo.[Matches_1339];
+CREATE TABLE dbo.[Matches_1339] (
+    [match_id] INT NULL,
+    [host_team] INT NULL,
+    [guest_team] INT NULL,
+    [host_goals] INT NULL,
+    [guest_goals] INT NULL
+);
+INSERT INTO dbo.[Matches_1339] ([match_id], [host_team], [guest_team], [host_goals], [guest_goals]) VALUES
+(1, 10, 20, 3, 0),
+(2, 30, 10, 2, 2),
+(3, 10, 50, 5, 1),
+(4, 20, 30, 1, 0),
+(5, 50, 30, 1, 0);
+
+GO
+
+                                                                                
+-- Problem 1357: 1357. Report Contiguous Dates
+-- Repository folder: 1357-report-contiguous-dates
+                                                                                
+
+IF OBJECT_ID(N'dbo.Failed_1357', N'U') IS NOT NULL DROP TABLE dbo.[Failed_1357];
+CREATE TABLE dbo.[Failed_1357] (
+    [fail_date] DATE NULL
+);
+INSERT INTO dbo.[Failed_1357] ([fail_date]) VALUES
+(N'2018-12-28'),
+(N'2018-12-29'),
+(N'2019-01-04'),
+(N'2019-01-05');
+
+IF OBJECT_ID(N'dbo.Succeeded_1357', N'U') IS NOT NULL DROP TABLE dbo.[Succeeded_1357];
+CREATE TABLE dbo.[Succeeded_1357] (
+    [success_date] DATE NULL
+);
+INSERT INTO dbo.[Succeeded_1357] ([success_date]) VALUES
+(N'2018-12-30'),
+(N'2018-12-31'),
+(N'2019-01-01'),
+(N'2019-01-02'),
+(N'2019-01-03'),
+(N'2019-01-06');
+
+GO
+
+                                                                                
+-- Problem 1399: 1399. Page Recommendations
+-- Repository folder: 1399-page-recommendations
+                                                                                
+
+IF OBJECT_ID(N'dbo.Friendship_1399', N'U') IS NOT NULL DROP TABLE dbo.[Friendship_1399];
+CREATE TABLE dbo.[Friendship_1399] (
+    [user1_id] INT NULL,
+    [user2_id] INT NULL
+);
+INSERT INTO dbo.[Friendship_1399] ([user1_id], [user2_id]) VALUES
+(1, 2),
+(1, 3),
+(1, 4),
+(2, 3),
+(2, 4),
+(2, 5),
+(6, 1);
+
+IF OBJECT_ID(N'dbo.Likes_1399', N'U') IS NOT NULL DROP TABLE dbo.[Likes_1399];
+CREATE TABLE dbo.[Likes_1399] (
+    [user_id] INT NULL,
+    [page_id] INT NULL
+);
+INSERT INTO dbo.[Likes_1399] ([user_id], [page_id]) VALUES
+(1, 88),
+(2, 23),
+(3, 24),
+(4, 56),
+(5, 11),
+(6, 33),
+(2, 77),
+(3, 77),
+(6, 88);
+
+GO
+
+                                                                                
+-- Problem 1405: 1405. All People Report to the Given Manager
+-- Repository folder: 1405-all-people-report-to-the-given-manager
+                                                                                
+
+IF OBJECT_ID(N'dbo.Employees_1405', N'U') IS NOT NULL DROP TABLE dbo.[Employees_1405];
+CREATE TABLE dbo.[Employees_1405] (
+    [employee_id] INT NULL,
+    [employee_name] NVARCHAR(255) NULL,
+    [manager_id] INT NULL
+);
+INSERT INTO dbo.[Employees_1405] ([employee_id], [employee_name], [manager_id]) VALUES
+(1, N'Boss', 1),
+(3, N'Alice', 3),
+(2, N'Bob', 1),
+(4, N'Daniel', 2),
+(7, N'Luis', 4),
+(8, N'Jhon', 3),
+(9, N'Angela', 8),
+(77, N'Robert', 1);
+
+GO
+
+                                                                                
+-- Problem 1420: 1420. Find the Start and End Number of Continuous Ranges
+-- Repository folder: 1420-find-the-start-and-end-number-of-continuous-ranges
+                                                                                
+
+IF OBJECT_ID(N'dbo.Logs_1420', N'U') IS NOT NULL DROP TABLE dbo.[Logs_1420];
+CREATE TABLE dbo.[Logs_1420] (
+    [log_id] INT NULL
+);
+INSERT INTO dbo.[Logs_1420] ([log_id]) VALUES
+(1),
+(2),
+(3),
+(7),
+(8),
+(10);
+
+GO
+
+                                                                                
+-- Problem 1438: 1438. Find the Team Size
+-- Repository folder: 1438-find-the-team-size
+                                                                                
+
+IF OBJECT_ID(N'dbo.Employee_1438', N'U') IS NOT NULL DROP TABLE dbo.[Employee_1438];
+CREATE TABLE dbo.[Employee_1438] (
+    [employee_id] INT NULL,
+    [team_id] INT NULL
+);
+INSERT INTO dbo.[Employee_1438] ([employee_id], [team_id]) VALUES
+(1, 8),
+(2, 8),
+(3, 8),
+(4, 7),
+(5, 9),
+(6, 9);
+
+GO
+
+                                                                                
+-- Problem 1481: 1481. Students With Invalid Departments
+-- Repository folder: 1481-students-with-invalid-departments
+                                                                                
+
+IF OBJECT_ID(N'dbo.Departments_1481', N'U') IS NOT NULL DROP TABLE dbo.[Departments_1481];
+CREATE TABLE dbo.[Departments_1481] (
+    [id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Departments_1481] ([id], [name]) VALUES
+(1, N'Electrical Engineering'),
+(7, N'Computer Engineering'),
+(13, N'Bussiness Administration');
+
+IF OBJECT_ID(N'dbo.Students_1481', N'U') IS NOT NULL DROP TABLE dbo.[Students_1481];
+CREATE TABLE dbo.[Students_1481] (
+    [id] INT NULL,
+    [name] NVARCHAR(255) NULL,
+    [department_id] INT NULL
+);
+INSERT INTO dbo.[Students_1481] ([id], [name], [department_id]) VALUES
+(23, N'Alice', 1),
+(1, N'Bob', 7),
+(5, N'Jennifer', 13),
+(2, N'John', 14),
+(4, N'Jasmine', 77),
+(3, N'Steve', 74),
+(6, N'Luis', 1),
+(8, N'Jonathan', 7),
+(7, N'Daiana', 33),
+(11, N'Madelynn', 1);
+
+GO
+
+                                                                                
+-- Problem 1536: 1536. Customers Who Bought Products A and B but Not C
+-- Repository folder: 1536-customers-who-bought-products-a-and-b-but-not-c
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customers_1536', N'U') IS NOT NULL DROP TABLE dbo.[Customers_1536];
+CREATE TABLE dbo.[Customers_1536] (
+    [customer_id] INT NULL,
+    [customer_name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Customers_1536] ([customer_id], [customer_name]) VALUES
+(1, N'Daniel'),
+(2, N'Diana'),
+(3, N'Elizabeth'),
+(4, N'Jhon');
+
+IF OBJECT_ID(N'dbo.Orders_1536', N'U') IS NOT NULL DROP TABLE dbo.[Orders_1536];
+CREATE TABLE dbo.[Orders_1536] (
+    [order_id] INT NULL,
+    [customer_id] INT NULL,
+    [product_name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Orders_1536] ([order_id], [customer_id], [product_name]) VALUES
+(10, 1, N'A'),
+(20, 1, N'B'),
+(30, 1, N'D'),
+(40, 1, N'C'),
+(50, 2, N'A'),
+(60, 3, N'A'),
+(70, 3, N'B'),
+(80, 3, N'D'),
+(90, 4, N'C');
+
+GO
+
+                                                                                
+-- Problem 1541: 1541. Top Travellers
+-- Repository folder: 1541-top-travellers
+                                                                                
+
+IF OBJECT_ID(N'dbo.Users_1541', N'U') IS NOT NULL DROP TABLE dbo.[Users_1541];
+CREATE TABLE dbo.[Users_1541] (
+    [id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Users_1541] ([id], [name]) VALUES
+(1, N'Alice'),
+(2, N'Bob'),
+(3, N'Alex'),
+(4, N'Donald'),
+(7, N'Lee'),
+(13, N'Jonathan'),
+(19, N'Elvis');
+
+IF OBJECT_ID(N'dbo.Rides_1541', N'U') IS NOT NULL DROP TABLE dbo.[Rides_1541];
+CREATE TABLE dbo.[Rides_1541] (
+    [id] INT NULL,
+    [user_id] INT NULL,
+    [distance] INT NULL
+);
+INSERT INTO dbo.[Rides_1541] ([id], [user_id], [distance]) VALUES
+(1, 1, 120),
+(2, 2, 317),
+(3, 3, 222),
+(4, 7, 100),
+(5, 13, 312),
+(6, 19, 50),
+(7, 7, 120),
+(8, 19, 400),
+(9, 7, 230);
+
+GO
+
+                                                                                
+-- Problem 1546: 1546. Find the Quiet Students in All Exams
+-- Repository folder: 1546-find-the-quiet-students-in-all-exams
+                                                                                
+
+IF OBJECT_ID(N'dbo.Student_1546', N'U') IS NOT NULL DROP TABLE dbo.[Student_1546];
+CREATE TABLE dbo.[Student_1546] (
+    [student_id] INT NULL,
+    [student_name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Student_1546] ([student_id], [student_name]) VALUES
+(1, N'Daniel'),
+(2, N'Jade'),
+(3, N'Stella'),
+(4, N'Jonathan'),
+(5, N'Will');
+
+IF OBJECT_ID(N'dbo.Exam_1546', N'U') IS NOT NULL DROP TABLE dbo.[Exam_1546];
+CREATE TABLE dbo.[Exam_1546] (
+    [exam_id] INT NULL,
+    [student_id] INT NULL,
+    [score] INT NULL
+);
+INSERT INTO dbo.[Exam_1546] ([exam_id], [student_id], [score]) VALUES
+(10, 1, 70),
+(10, 2, 80),
+(10, 3, 90),
+(20, 1, 80),
+(30, 1, 70),
+(30, 3, 80),
+(30, 4, 90),
+(40, 1, 60),
+(40, 2, 70),
+(40, 4, 80);
+
+GO
+
+                                                                                
+-- Problem 1565: 1565. Evaluate Boolean Expression
+-- Repository folder: 1565-evaluate-boolean-expression
+                                                                                
+
+-- WARNING: No table schema could be parsed from this README.
+
+GO
+
+                                                                                
+-- Problem 1578: 1578. Apples & Oranges
+-- Repository folder: 1578-apples-oranges
+                                                                                
+
+IF OBJECT_ID(N'dbo.Sales_1578', N'U') IS NOT NULL DROP TABLE dbo.[Sales_1578];
+CREATE TABLE dbo.[Sales_1578] (
+    [sale_date] DATE NULL,
+    [fruit] NVARCHAR(255) NULL,
+    [sold_num] INT NULL
+);
+INSERT INTO dbo.[Sales_1578] ([sale_date], [fruit], [sold_num]) VALUES
+(N'2020-05-01', N'apples', 10),
+(N'2020-05-01', N'oranges', 8),
+(N'2020-05-02', N'apples', 15),
+(N'2020-05-02', N'oranges', 15),
+(N'2020-05-03', N'apples', 20),
+(N'2020-05-03', N'oranges', 0),
+(N'2020-05-04', N'apples', 15),
+(N'2020-05-04', N'oranges', 16);
+
+GO
+
+                                                                                
+-- Problem 1639: 1639. Friendly Movies Streamed Last Month
+-- Repository folder: 1639-friendly-movies-streamed-last-month
+                                                                                
+
+IF OBJECT_ID(N'dbo.TVProgram_1639', N'U') IS NOT NULL DROP TABLE dbo.[TVProgram_1639];
+CREATE TABLE dbo.[TVProgram_1639] (
+    [program_date] DATE NULL,
+    [content_id] INT NULL,
+    [channel] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[TVProgram_1639] ([program_date], [content_id], [channel]) VALUES
+(N'2020-06-10 08:00', 1, N'LC-Channel'),
+(N'2020-05-11 12:00', 2, N'LC-Channel'),
+(N'2020-05-12 12:00', 3, N'LC-Channel'),
+(N'2020-05-13 14:00', 4, N'Disney Ch'),
+(N'2020-06-18 14:00', 4, N'Disney Ch'),
+(N'2020-07-15 16:00', 5, N'Disney Ch');
+
+IF OBJECT_ID(N'dbo.Content_1639', N'U') IS NOT NULL DROP TABLE dbo.[Content_1639];
+CREATE TABLE dbo.[Content_1639] (
+    [content_id] NVARCHAR(255) NULL,
+    [title] NVARCHAR(255) NULL,
+    [Kids_content] NVARCHAR(255) NULL,
+    [content_type] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Content_1639] ([content_id], [title], [Kids_content], [content_type]) VALUES
+(N'1', N'Leetcode Movie', N'N', N'Movies'),
+(N'2', N'Alg. for Kids', N'Y', N'Series'),
+(N'3', N'Database Sols', N'N', N'Series'),
+(N'4', N'Aladdin', N'Y', N'Movies'),
+(N'5', N'Cinderella', N'Y', N'Movies');
+
+GO
+
+                                                                                
+-- Problem 1641: 1641. Countries You Can Safely Invest In
+-- Repository folder: 1641-countries-you-can-safely-invest-in
+                                                                                
+
+-- WARNING: No table schema could be parsed from this README.
+
+GO
+
+                                                                                
+-- Problem 1654: 1654. Customer Order Frequency
+-- Repository folder: 1654-customer-order-frequency
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customers_1654', N'U') IS NOT NULL DROP TABLE dbo.[Customers_1654];
+CREATE TABLE dbo.[Customers_1654] (
+    [customer_id] INT NULL,
+    [name] NVARCHAR(255) NULL,
+    [country] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Customers_1654] ([customer_id], [name], [country]) VALUES
+(1, N'Winston', N'USA'),
+(2, N'Jonathan', N'Peru'),
+(3, N'Moustafa', N'Egypt');
+
+IF OBJECT_ID(N'dbo.Product_1654', N'U') IS NOT NULL DROP TABLE dbo.[Product_1654];
+CREATE TABLE dbo.[Product_1654] (
+    [product_id] INT NULL,
+    [description] NVARCHAR(255) NULL,
+    [price] INT NULL
+);
+INSERT INTO dbo.[Product_1654] ([product_id], [description], [price]) VALUES
+(10, N'LC Phone', 300),
+(20, N'LC T-Shirt', 10),
+(30, N'LC Book', 45),
+(40, N'LC Keychain', 2);
+
+IF OBJECT_ID(N'dbo.Orders_1654', N'U') IS NOT NULL DROP TABLE dbo.[Orders_1654];
+CREATE TABLE dbo.[Orders_1654] (
+    [order_id] INT NULL,
+    [customer_id] INT NULL,
+    [product_id] INT NULL,
+    [order_date] DATE NULL,
+    [quantity] INT NULL
+);
+INSERT INTO dbo.[Orders_1654] ([order_id], [customer_id], [product_id], [order_date], [quantity]) VALUES
+(1, 1, 10, N'2020-06-10', 1),
+(2, 1, 20, N'2020-07-01', 1),
+(3, 1, 30, N'2020-07-08', 2),
+(4, 2, 10, N'2020-06-15', 2),
+(5, 2, 40, N'2020-07-01', 10),
+(6, 3, 20, N'2020-06-24', 2),
+(7, 3, 30, N'2020-06-25', 2),
+(9, 3, 30, N'2020-05-08', 3);
+
+GO
+
+                                                                                
+-- Problem 1671: 1671. The Most Recent Three Orders
+-- Repository folder: 1671-the-most-recent-three-orders
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customers_1671', N'U') IS NOT NULL DROP TABLE dbo.[Customers_1671];
+CREATE TABLE dbo.[Customers_1671] (
+    [customer_id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Customers_1671] ([customer_id], [name]) VALUES
+(1, N'Winston'),
+(2, N'Jonathan'),
+(3, N'Annabelle'),
+(4, N'Marwan'),
+(5, N'Khaled');
+
+IF OBJECT_ID(N'dbo.Orders_1671', N'U') IS NOT NULL DROP TABLE dbo.[Orders_1671];
+CREATE TABLE dbo.[Orders_1671] (
+    [order_id] INT NULL,
+    [order_date] DATE NULL,
+    [customer_id] INT NULL,
+    [cost] INT NULL
+);
+INSERT INTO dbo.[Orders_1671] ([order_id], [order_date], [customer_id], [cost]) VALUES
+(1, N'2020-07-31', 1, 30),
+(2, N'2020-07-30', 2, 40),
+(3, N'2020-07-31', 3, 70),
+(4, N'2020-07-29', 4, 100),
+(5, N'2020-06-10', 1, 1010),
+(6, N'2020-08-01', 2, 102),
+(7, N'2020-08-01', 3, 111),
+(8, N'2020-08-03', 1, 99),
+(9, N'2020-08-07', 2, 32),
+(10, N'2020-07-15', 1, 2);
+
+GO
+
+                                                                                
+-- Problem 1688: 1688. The Most Recent Orders for Each Product
+-- Repository folder: 1688-the-most-recent-orders-for-each-product
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customers_1688', N'U') IS NOT NULL DROP TABLE dbo.[Customers_1688];
+CREATE TABLE dbo.[Customers_1688] (
+    [customer_id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Customers_1688] ([customer_id], [name]) VALUES
+(1, N'Winston'),
+(2, N'Jonathan'),
+(3, N'Annabelle'),
+(4, N'Marwan'),
+(5, N'Khaled');
+
+IF OBJECT_ID(N'dbo.Orders_1688', N'U') IS NOT NULL DROP TABLE dbo.[Orders_1688];
+CREATE TABLE dbo.[Orders_1688] (
+    [order_id] INT NULL,
+    [order_date] DATE NULL,
+    [customer_id] INT NULL,
+    [product_id] INT NULL
+);
+INSERT INTO dbo.[Orders_1688] ([order_id], [order_date], [customer_id], [product_id]) VALUES
+(1, N'2020-07-31', 1, 1),
+(2, N'2020-07-30', 2, 2),
+(3, N'2020-08-29', 3, 3),
+(4, N'2020-07-29', 4, 1),
+(5, N'2020-06-10', 1, 2),
+(6, N'2020-08-01', 2, 1),
+(7, N'2020-08-01', 3, 1),
+(8, N'2020-08-03', 1, 2),
+(9, N'2020-08-07', 2, 3),
+(10, N'2020-07-15', 1, 2);
+
+IF OBJECT_ID(N'dbo.Products_1688', N'U') IS NOT NULL DROP TABLE dbo.[Products_1688];
+CREATE TABLE dbo.[Products_1688] (
+    [product_id] INT NULL,
+    [product_name] NVARCHAR(255) NULL,
+    [price] INT NULL
+);
+INSERT INTO dbo.[Products_1688] ([product_id], [product_name], [price]) VALUES
+(1, N'keyboard', 120),
+(2, N'mouse', 80),
+(3, N'screen', 600),
+(4, N'hard disk', 450);
+
+GO
+
+                                                                                
+-- Problem 1718: 1718. Warehouse Manager
+-- Repository folder: 1718-warehouse-manager
+                                                                                
+
+IF OBJECT_ID(N'dbo.Warehouse_1718', N'U') IS NOT NULL DROP TABLE dbo.[Warehouse_1718];
+CREATE TABLE dbo.[Warehouse_1718] (
+    [name] NVARCHAR(255) NULL,
+    [product_id] INT NULL,
+    [units] INT NULL
+);
+INSERT INTO dbo.[Warehouse_1718] ([name], [product_id], [units]) VALUES
+(N'LCHouse1', 1, 1),
+(N'LCHouse1', 2, 10),
+(N'LCHouse1', 3, 5),
+(N'LCHouse2', 1, 2),
+(N'LCHouse2', 2, 2),
+(N'LCHouse3', 4, 1);
+
+IF OBJECT_ID(N'dbo.Products_1718', N'U') IS NOT NULL DROP TABLE dbo.[Products_1718];
+CREATE TABLE dbo.[Products_1718] (
+    [product_id] INT NULL,
+    [product_name] NVARCHAR(255) NULL,
+    [Width] INT NULL,
+    [Length] INT NULL,
+    [Height] INT NULL
+);
+INSERT INTO dbo.[Products_1718] ([product_id], [product_name], [Width], [Length], [Height]) VALUES
+(1, N'LC-TV', 5, 50, 40),
+(2, N'LC-KeyChain', 5, 5, 5),
+(3, N'LC-Phone', 2, 10, 10),
+(4, N'LC-T-Shirt', 4, 10, 20);
+
+GO
+
+                                                                                
+-- Problem 1734: 1734. Bank Account Summary II
+-- Repository folder: 1734-bank-account-summary-ii
+                                                                                
+
+IF OBJECT_ID(N'dbo.Users_1734', N'U') IS NOT NULL DROP TABLE dbo.[Users_1734];
+CREATE TABLE dbo.[Users_1734] (
+    [account] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Users_1734] ([account], [name]) VALUES
+(900001, N'Alice'),
+(900002, N'Bob'),
+(900003, N'Charlie');
+
+IF OBJECT_ID(N'dbo.Transactions_1734', N'U') IS NOT NULL DROP TABLE dbo.[Transactions_1734];
+CREATE TABLE dbo.[Transactions_1734] (
+    [trans_id] INT NULL,
+    [account] INT NULL,
+    [amount] INT NULL,
+    [transacted_on] DATE NULL
+);
+INSERT INTO dbo.[Transactions_1734] ([trans_id], [account], [amount], [transacted_on]) VALUES
+(1, 900001, 7000, N'2020-08-01'),
+(2, 900001, 7000, N'2020-09-01'),
+(3, 900001, -3000, N'2020-09-02'),
+(4, 900002, 1000, N'2020-09-12'),
+(5, 900003, 6000, N'2020-08-07'),
+(6, 900003, 6000, N'2020-09-07'),
+(7, 900003, -4000, N'2020-09-11');
+
+GO
+
+                                                                                
+-- Problem 1735: 1735. The Most Frequently Ordered Products for Each Customer
+-- Repository folder: 1735-the-most-frequently-ordered-products-for-each-customer
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customers_1735', N'U') IS NOT NULL DROP TABLE dbo.[Customers_1735];
+CREATE TABLE dbo.[Customers_1735] (
+    [customer_id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Customers_1735] ([customer_id], [name]) VALUES
+(1, N'Alice'),
+(2, N'Bob'),
+(3, N'Tom'),
+(4, N'Jerry'),
+(5, N'John');
+
+IF OBJECT_ID(N'dbo.Orders_1735', N'U') IS NOT NULL DROP TABLE dbo.[Orders_1735];
+CREATE TABLE dbo.[Orders_1735] (
+    [order_id] INT NULL,
+    [order_date] DATE NULL,
+    [customer_id] INT NULL,
+    [product_id] INT NULL
+);
+INSERT INTO dbo.[Orders_1735] ([order_id], [order_date], [customer_id], [product_id]) VALUES
+(1, N'2020-07-31', 1, 1),
+(2, N'2020-07-30', 2, 2),
+(3, N'2020-08-29', 3, 3),
+(4, N'2020-07-29', 4, 1),
+(5, N'2020-06-10', 1, 2),
+(6, N'2020-08-01', 2, 1),
+(7, N'2020-08-01', 3, 3),
+(8, N'2020-08-03', 1, 2),
+(9, N'2020-08-07', 2, 3),
+(10, N'2020-07-15', 1, 2);
+
+IF OBJECT_ID(N'dbo.Products_1735', N'U') IS NOT NULL DROP TABLE dbo.[Products_1735];
+CREATE TABLE dbo.[Products_1735] (
+    [product_id] INT NULL,
+    [product_name] NVARCHAR(255) NULL,
+    [price] INT NULL
+);
+INSERT INTO dbo.[Products_1735] ([product_id], [product_name], [price]) VALUES
+(1, N'keyboard', 120),
+(2, N'mouse', 80),
+(3, N'screen', 600),
+(4, N'hard disk', 450);
+
+GO
+
+                                                                                
+-- Problem 1749: 1749. Sellers With No Sales
+-- Repository folder: 1749-sellers-with-no-sales
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customer_1749', N'U') IS NOT NULL DROP TABLE dbo.[Customer_1749];
+CREATE TABLE dbo.[Customer_1749] (
+    [customer_id] INT NULL,
+    [customer_name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Customer_1749] ([customer_id], [customer_name]) VALUES
+(101, N'Alice'),
+(102, N'Bob'),
+(103, N'Charlie');
+
+IF OBJECT_ID(N'dbo.Orders_1749', N'U') IS NOT NULL DROP TABLE dbo.[Orders_1749];
+CREATE TABLE dbo.[Orders_1749] (
+    [order_id] INT NULL,
+    [sale_date] DATE NULL,
+    [order_cost] INT NULL,
+    [customer_id] INT NULL,
+    [seller_id] INT NULL
+);
+INSERT INTO dbo.[Orders_1749] ([order_id], [sale_date], [order_cost], [customer_id], [seller_id]) VALUES
+(1, N'2020-03-01', 1500, 101, 1),
+(2, N'2020-05-25', 2400, 102, 2),
+(3, N'2019-05-25', 800, 101, 3),
+(4, N'2020-09-13', 1000, 103, 2),
+(5, N'2019-02-11', 700, 101, 2);
+
+IF OBJECT_ID(N'dbo.Seller_1749', N'U') IS NOT NULL DROP TABLE dbo.[Seller_1749];
+CREATE TABLE dbo.[Seller_1749] (
+    [seller_id] INT NULL,
+    [seller_name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Seller_1749] ([seller_id], [seller_name]) VALUES
+(1, N'Daniel'),
+(2, N'Elizabeth'),
+(3, N'Frank');
+
+GO
+
+                                                                                
+-- Problem 1837: 1837. Daily Leads and Partners
+-- Repository folder: 1837-daily-leads-and-partners
+                                                                                
+
+IF OBJECT_ID(N'dbo.DailySales_1837', N'U') IS NOT NULL DROP TABLE dbo.[DailySales_1837];
+CREATE TABLE dbo.[DailySales_1837] (
+    [date_id] DATE NULL,
+    [make_name] NVARCHAR(255) NULL,
+    [lead_id] INT NULL,
+    [partner_id] INT NULL
+);
+INSERT INTO dbo.[DailySales_1837] ([date_id], [make_name], [lead_id], [partner_id]) VALUES
+(N'2020-12-8', N'toyota', 0, 1),
+(N'2020-12-8', N'toyota', 1, 0),
+(N'2020-12-8', N'toyota', 1, 2),
+(N'2020-12-7', N'toyota', 0, 2),
+(N'2020-12-7', N'toyota', 0, 1),
+(N'2020-12-8', N'honda', 1, 2),
+(N'2020-12-8', N'honda', 2, 1),
+(N'2020-12-7', N'honda', 0, 1),
+(N'2020-12-7', N'honda', 1, 2),
+(N'2020-12-7', N'honda', 2, 1);
+
+GO
+
+                                                                                
+-- Problem 1842: 1842. Number of Calls Between Two Persons
+-- Repository folder: 1842-number-of-calls-between-two-persons
+                                                                                
+
+IF OBJECT_ID(N'dbo.Calls_1842', N'U') IS NOT NULL DROP TABLE dbo.[Calls_1842];
+CREATE TABLE dbo.[Calls_1842] (
+    [from_id] INT NULL,
+    [to_id] INT NULL,
+    [duration] INT NULL
+);
+INSERT INTO dbo.[Calls_1842] ([from_id], [to_id], [duration]) VALUES
+(1, 2, 59),
+(2, 1, 11),
+(1, 3, 20),
+(3, 4, 100),
+(3, 4, 200),
+(3, 4, 200),
+(4, 3, 499);
+
+GO
+
+                                                                                
+-- Problem 1852: 1852. Biggest Window Between Visits
+-- Repository folder: 1852-biggest-window-between-visits
+                                                                                
+
+IF OBJECT_ID(N'dbo.UserVisits_1852', N'U') IS NOT NULL DROP TABLE dbo.[UserVisits_1852];
+CREATE TABLE dbo.[UserVisits_1852] (
+    [user_id] INT NULL,
+    [visit_date] DATE NULL
+);
+INSERT INTO dbo.[UserVisits_1852] ([user_id], [visit_date]) VALUES
+(1, N'2020-11-28'),
+(1, N'2020-10-20'),
+(1, N'2020-12-3'),
+(2, N'2020-10-5'),
+(2, N'2020-12-9'),
+(3, N'2020-11-11');
+
+GO
+
+                                                                                
+-- Problem 1892: 1892. Find Total Time Spent by Each Employee
+-- Repository folder: 1892-find-total-time-spent-by-each-employee
+                                                                                
+
+IF OBJECT_ID(N'dbo.Employees_1892', N'U') IS NOT NULL DROP TABLE dbo.[Employees_1892];
+CREATE TABLE dbo.[Employees_1892] (
+    [emp_id] INT NULL,
+    [event_day] DATE NULL,
+    [in_time] INT NULL,
+    [out_time] INT NULL
+);
+INSERT INTO dbo.[Employees_1892] ([emp_id], [event_day], [in_time], [out_time]) VALUES
+(1, N'2020-11-28', 4, 32),
+(1, N'2020-11-28', 55, 200),
+(1, N'2020-12-03', 1, 42),
+(2, N'2020-11-28', 3, 33),
+(2, N'2020-12-09', 47, 74);
+
+GO
+
+                                                                                
+-- Problem 1898: 1898. Leetflex Banned Accounts
+-- Repository folder: 1898-leetflex-banned-accounts
+                                                                                
+
+IF OBJECT_ID(N'dbo.LogInfo_1898', N'U') IS NOT NULL DROP TABLE dbo.[LogInfo_1898];
+CREATE TABLE dbo.[LogInfo_1898] (
+    [account_id] INT NULL,
+    [ip_address] INT NULL,
+    [login] DATETIME2 NULL,
+    [logout] DATETIME2 NULL
+);
+INSERT INTO dbo.[LogInfo_1898] ([account_id], [ip_address], [login], [logout]) VALUES
+(1, 1, N'2021-02-01 09:00:00', N'2021-02-01 09:30:00'),
+(1, 2, N'2021-02-01 08:00:00', N'2021-02-01 11:30:00'),
+(2, 6, N'2021-02-01 20:30:00', N'2021-02-01 22:00:00'),
+(2, 7, N'2021-02-02 20:30:00', N'2021-02-02 22:00:00'),
+(3, 9, N'2021-02-01 16:00:00', N'2021-02-01 16:59:59'),
+(3, 13, N'2021-02-01 17:00:00', N'2021-02-01 17:59:59'),
+(4, 10, N'2021-02-01 16:00:00', N'2021-02-01 17:00:00'),
+(4, 11, N'2021-02-01 17:00:00', N'2021-02-01 17:59:59');
+
+GO
+
+                                                                                
+-- Problem 1914: 1914. Find the Subtasks That Did Not Execute
+-- Repository folder: 1914-find-the-subtasks-that-did-not-execute
+                                                                                
+
+IF OBJECT_ID(N'dbo.Tasks_1914', N'U') IS NOT NULL DROP TABLE dbo.[Tasks_1914];
+CREATE TABLE dbo.[Tasks_1914] (
+    [task_id] INT NULL,
+    [subtasks_count] INT NULL
+);
+INSERT INTO dbo.[Tasks_1914] ([task_id], [subtasks_count]) VALUES
+(1, 3),
+(2, 2),
+(3, 4);
+
+IF OBJECT_ID(N'dbo.Executed_1914', N'U') IS NOT NULL DROP TABLE dbo.[Executed_1914];
+CREATE TABLE dbo.[Executed_1914] (
+    [task_id] INT NULL,
+    [subtask_id] INT NULL
+);
+INSERT INTO dbo.[Executed_1914] ([task_id], [subtask_id]) VALUES
+(1, 2),
+(3, 1),
+(3, 2),
+(3, 3),
+(3, 4);
+
+GO
+
+                                                                                
+-- Problem 1932: 1932. Grand Slam Titles
+-- Repository folder: 1932-grand-slam-titles
+                                                                                
+
+IF OBJECT_ID(N'dbo.Players_1932', N'U') IS NOT NULL DROP TABLE dbo.[Players_1932];
+CREATE TABLE dbo.[Players_1932] (
+    [player_id] INT NULL,
+    [player_name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Players_1932] ([player_id], [player_name]) VALUES
+(1, N'Nadal'),
+(2, N'Federer'),
+(3, N'Novak');
+
+IF OBJECT_ID(N'dbo.Championships_1932', N'U') IS NOT NULL DROP TABLE dbo.[Championships_1932];
+CREATE TABLE dbo.[Championships_1932] (
+    [year] INT NULL,
+    [Wimbledon] INT NULL,
+    [Fr_open] INT NULL,
+    [US_open] INT NULL,
+    [Au_open] INT NULL
+);
+INSERT INTO dbo.[Championships_1932] ([year], [Wimbledon], [Fr_open], [US_open], [Au_open]) VALUES
+(2018, 1, 1, 1, 1),
+(2019, 1, 1, 2, 2),
+(2020, 2, 1, 2, 2);
+
+GO
+
+                                                                                
+-- Problem 1948: 1948. Rearrange Products Table
+-- Repository folder: 1948-rearrange-products-table
+                                                                                
+
+IF OBJECT_ID(N'dbo.Products_1948', N'U') IS NOT NULL DROP TABLE dbo.[Products_1948];
+CREATE TABLE dbo.[Products_1948] (
+    [product_id] INT NULL,
+    [store1] INT NULL,
+    [store2] INT NULL,
+    [store3] INT NULL
+);
+INSERT INTO dbo.[Products_1948] ([product_id], [store1], [store2], [store3]) VALUES
+(0, 95, 100, 105),
+(1, 70, NULL, 80);
+
+GO
+
+                                                                                
+-- Problem 1974: 1974. Find Customers With Positive Revenue this Year
+-- Repository folder: 1974-find-customers-with-positive-revenue-this-year
+                                                                                
+
+IF OBJECT_ID(N'dbo.Customers_1974', N'U') IS NOT NULL DROP TABLE dbo.[Customers_1974];
+CREATE TABLE dbo.[Customers_1974] (
+    [customer_id] INT NULL,
+    [year] INT NULL,
+    [revenue] INT NULL
+);
+INSERT INTO dbo.[Customers_1974] ([customer_id], [year], [revenue]) VALUES
+(1, 2018, 50),
+(1, 2021, 30),
+(1, 2020, 70),
+(2, 2021, -50),
+(3, 2018, 10),
+(3, 2016, 50),
+(4, 2021, 20);
+
+GO
+
+                                                                                
+-- Problem 1981: 1981. Maximum Transaction Each Day
+-- Repository folder: 1981-maximum-transaction-each-day
+                                                                                
+
+IF OBJECT_ID(N'dbo.Transactions_1981', N'U') IS NOT NULL DROP TABLE dbo.[Transactions_1981];
+CREATE TABLE dbo.[Transactions_1981] (
+    [transaction_id] INT NULL,
+    [day] DATETIME2 NULL,
+    [amount] INT NULL
+);
+INSERT INTO dbo.[Transactions_1981] ([transaction_id], [day], [amount]) VALUES
+(8, N'2021-4-3 15:57:28', 57),
+(9, N'2021-4-28 08:47:25', 21),
+(1, N'2021-4-29 13:28:30', 58),
+(5, N'2021-4-28 16:39:59', 40),
+(6, N'2021-4-29 23:39:28', 58);
+
+GO
+
+                                                                                
+-- Problem 2024: 2024. Calculate Special Bonus
+-- Repository folder: 2024-calculate-special-bonus
+                                                                                
+
+IF OBJECT_ID(N'dbo.Employees_2024', N'U') IS NOT NULL DROP TABLE dbo.[Employees_2024];
+CREATE TABLE dbo.[Employees_2024] (
+    [employee_id] INT NULL,
+    [name] NVARCHAR(255) NULL,
+    [salary] INT NULL
+);
+INSERT INTO dbo.[Employees_2024] ([employee_id], [name], [salary]) VALUES
+(2, N'Meir', 3000),
+(3, N'Michael', 3800),
+(7, N'Addilyn', 7400),
+(8, N'Juan', 6100),
+(9, N'Kannon', 7700);
+
+GO
+
+                                                                                
+-- Problem 2041: 2041. The Latest Login in 2020
+-- Repository folder: 2041-the-latest-login-in-2020
+                                                                                
+
+IF OBJECT_ID(N'dbo.Logins_2041', N'U') IS NOT NULL DROP TABLE dbo.[Logins_2041];
+CREATE TABLE dbo.[Logins_2041] (
+    [user_id] INT NULL,
+    [time_stamp] DATETIME2 NULL
+);
+INSERT INTO dbo.[Logins_2041] ([user_id], [time_stamp]) VALUES
+(6, N'2020-06-30 15:06:07'),
+(6, N'2021-04-21 14:06:06'),
+(6, N'2019-03-07 00:18:15'),
+(8, N'2020-02-01 05:10:53'),
+(8, N'2020-12-30 00:46:50'),
+(2, N'2020-01-16 02:49:50'),
+(2, N'2019-08-25 07:59:08'),
+(14, N'2019-07-14 09:00:00'),
+(14, N'2021-01-06 11:59:59');
+
+GO
+
+                                                                                
+-- Problem 2110: 2110. Employees With Missing Information
+-- Repository folder: 2110-employees-with-missing-information
+                                                                                
+
+IF OBJECT_ID(N'dbo.Employees_2110', N'U') IS NOT NULL DROP TABLE dbo.[Employees_2110];
+CREATE TABLE dbo.[Employees_2110] (
+    [employee_id] INT NULL,
+    [name] NVARCHAR(255) NULL
+);
+INSERT INTO dbo.[Employees_2110] ([employee_id], [name]) VALUES
+(2, N'Crew'),
+(4, N'Haven'),
+(5, N'Kristian');
+
+IF OBJECT_ID(N'dbo.Salaries_2110', N'U') IS NOT NULL DROP TABLE dbo.[Salaries_2110];
+CREATE TABLE dbo.[Salaries_2110] (
+    [employee_id] INT NULL,
+    [salary] INT NULL
+);
+INSERT INTO dbo.[Salaries_2110] ([employee_id], [salary]) VALUES
+(5, 76071),
+(1, 22517),
+(4, 63539);
+
+GO
