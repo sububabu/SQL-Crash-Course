@@ -1,0 +1,879 @@
+-- 175. Combine Two Tables
+-- select * from Person_0175 
+-- select * from Address_0175 
+SELECT p.firstname,
+       p.lastname,
+       CASE WHEN a.city IS NULL THEN 'NULL' ELSE a.city END AS city,
+       CASE WHEN a.state IS NULL THEN 'NULL' ELSE a.state END AS state
+FROM   person_0175 AS p
+       LEFT OUTER JOIN
+       address_0175 AS a
+       ON p.personid = a.personid;
+
+--182. Duplicate Emails
+-- select * from Person_0182
+SELECT   email
+FROM     Person_0182
+GROUP BY email
+HAVING   count(email) > 1;
+
+--183. Customers Who Never Order
+-- select * from Customers_0183 
+-- SELECT * from Orders_0183 
+SELECT c.name
+FROM   customers_0183 AS c
+       LEFT OUTER JOIN
+       orders_0183 AS o
+       ON c.id = o.customerid
+WHERE  o.id IS NULL;
+
+--184. Department Highest Salary
+--select * from Employee_0184
+--select * from department_0184
+SELECT department,
+       employee,
+       salary
+FROM   (SELECT d.name AS department,
+               e.name AS employee,
+               e.salary AS salary,
+               dense_rank() OVER (PARTITION BY d.name ORDER BY salary DESC) AS rn
+        FROM   Employee_0184 AS e
+               LEFT OUTER JOIN
+               Department_0184 AS d
+               ON e.departmentId = d.id) AS t
+WHERE  rn = 1;
+
+--586. Customer Placing the Largest Number of Orders
+--Select  * from Orders_0586
+SELECT   TOP 1 customer_number
+FROM     (SELECT   customer_number,
+                   count(order_number) AS order_number
+          FROM     Orders_0586
+          GROUP BY customer_number) AS t
+ORDER BY order_number DESC;
+
+--=============================-- 
+SELECT customer_number
+FROM   (SELECT   customer_number,
+                 count(order_number) AS order_number,
+                 RANK() OVER (ORDER BY count(order_number) DESC) AS nr
+        FROM     Orders_0586
+        GROUP BY customer_number) AS t
+WHERE  nr = 1;
+
+--603. Consecutive Available Seats--
+--select * from Cinema_0603 
+SELECT seat_id
+FROM   (SELECT *,
+               lag(free) OVER (ORDER BY seat_id) AS previous_seat,
+               LEAD(free) OVER (ORDER BY seat_id) AS next_seat
+        FROM   Cinema_0603) AS t
+WHERE  free = 1
+       AND (previous_seat = 1
+            OR next_seat = 1);
+
+--607. Sales Person
+-- select  * from SalesPerson_0607 
+-- select * from Company_0607 
+-- SELECT * from Orders_0607
+WITH   cte
+AS     (SELECT s.name AS person_name,
+               c.name AS company_name
+        FROM   SalesPerson_0607 AS s
+               LEFT OUTER JOIN
+               --nothing but left join 
+               Orders_0607 AS o
+               ON s.sales_id = o.sales_id
+               LEFT OUTER JOIN
+               Company_0607 AS c
+               ON o.com_id = c.com_id)
+SELECT DISTINCT (person_name) AS person_name --, coalesce( company_name , 'NA') as company_name
+FROM   cte
+WHERE  person_name NOT IN (SELECT person_name
+                           FROM   cte
+                           WHERE  company_name = 'RED');
+
+--608. Tree Node       
+-- select * from tree_0608
+SELECT id,
+       CASE WHEN p_id IS NULL THEN 'Root' WHEN id IN (SELECT p_id
+                                                      FROM   Tree_0608) THEN 'inner' ELSE 'leaf' END AS 'type'
+FROM   Tree_0608;
+
+--613. Shortest Distance in a Line
+-- select * from Point_0613 
+SELECT min(abs(p1.x - p2.x)) AS Shortest
+FROM   Point_0613 AS p1
+       INNER JOIN
+       Point_0613 AS p2
+       ON p1.x < p2.x;
+
+--1136. Actors and Directors Who Cooperated At Least Three Times
+-- SELECT * from ActorDirector_1136
+SELECT   actor_id,
+         director_id
+FROM     (SELECT *,
+                 count([timestamp]) OVER (PARTITION BY actor_id, director_id) AS count_times
+          FROM   ActorDirector_1136) AS t
+WHERE    count_times >= 3
+GROUP BY actor_id, director_id;
+
+--another Way --
+SELECT   actor_id,
+         director_id,
+         count(timestamp) AS cnt_work
+FROM     ActorDirector_1136
+GROUP BY actor_id, director_id
+HAVING   count(timestamp) >= 3;
+
+--1163. Project Employees III
+-- select * from Employee_1163 
+-- select * from Project_1163 
+SELECT project_id,
+       employee_id
+FROM   (SELECT p.project_id AS project_id,
+               e.employee_id AS employee_id,
+               DENSE_RANK() OVER (PARTITION BY project_id ORDER BY experience_years DESC) AS rn
+        FROM   Employee_1163 AS e
+               LEFT OUTER JOIN
+               Project_1163 AS p
+               ON e.employee_id = p.employee_id) AS t
+WHERE  rn = 1;
+
+--1179. Game Play Analysis I
+-- select * from Activity_1179
+SELECT   player_id,
+         min(event_date) AS first_login
+FROM     Activity_1179
+GROUP BY player_id;
+
+--1180. Game Play Analysis II
+-- select * from Activity_1180
+SELECT   player_id,
+         device_id
+FROM     (SELECT player_id,
+                 device_id,
+                 DENSE_RANK() OVER (PARTITION BY player_id ORDER BY device_id) AS rn
+          FROM   Activity_1180) AS t
+WHERE    rn = 1
+GROUP BY player_id, device_id;
+
+--1181. Game Play Analysis III
+--select * from Activity_1181
+SELECT player_id,
+       event_date,
+       sum(games_played) OVER (PARTITION BY player_id ORDER BY event_date) AS games_played_so_far
+FROM   Activity_1181;
+
+--1214. Highest Grade For Each Student
+-- select * from Enrollments_1214 
+WITH   cte
+AS     (SELECT *
+        FROM   (SELECT student_id,
+                       course_id,
+                       grade,
+                       DENSE_RANK() OVER (PARTITION BY student_id ORDER BY grade DESC) AS rn
+                FROM   Enrollments_1214) AS t
+        WHERE  rn = 1)
+SELECT student_id,
+       course_id,
+       grade
+FROM   (SELECT student_id,
+               course_id,
+               grade,
+               DENSE_RANK() OVER (PARTITION BY student_id ORDER BY course_id) AS final_grade
+        FROM   cte) AS u
+WHERE  final_grade = 1;
+
+--another for consideration --
+SELECT *,
+       dense_rank() OVER (PARTITION BY student_id ORDER BY grade DESC, course_id ASC) AS rnk
+FROM   Enrollments_1214;
+
+-- 1291. Immediate Food Delivery I
+-- select * from Delivery_1291
+SELECT round((sum(status) * 100.0) / count(status), 2) AS immediate_percentage
+FROM   (SELECT *,
+               CASE WHEN order_date = customer_pref_delivery_date THEN 1 ELSE 0 END AS status
+        FROM   Delivery_1291) AS s;
+
+-- 1339. Team Scores in Football Tournament
+-- select * from Teams_1339
+-- select * from Matches_1339
+--(Need to add the Points then for home and guest team then do the union all then Join )
+WITH     cte
+AS       (SELECT *,
+                 CASE WHEN host_goals > guest_goals THEN 3 WHEN host_goals = guest_goals THEN 1 ELSE 0 END AS points_host,
+                 CASE WHEN guest_goals < host_goals THEN 0 WHEN host_goals = guest_goals THEN 1 ELSE 3 END AS points_guest
+          FROM   Matches_1339),
+         cte2
+AS       (SELECT   host_team AS team_name,
+                   sum(points_host) AS num_points
+          FROM     cte
+          GROUP BY host_team
+          UNION ALL
+          SELECT   guest_team AS team_name,
+                   sum(points_guest) AS num_points
+          FROM     cte
+          GROUP BY guest_team),
+         cte3
+AS       (SELECT   team_name,
+                   sum(num_points) AS num_points
+          FROM     cte2
+          GROUP BY team_name)
+SELECT   t.team_id,
+         t.team_name,
+         COALESCE (c.num_points, 0) AS num_points
+FROM     cte3 AS c
+         RIGHT OUTER JOIN
+         Teams_1339 AS t
+         ON c.team_name = t.team_id
+ORDER BY num_points DESC, team_id ASC;
+
+--1357. Report Contiguous Dates
+-- select * from Succeeded_1357
+-- select * from Failed_1357
+WITH     cte
+AS       (SELECT success_date AS dates,
+                 'succeeded' AS period_state
+          FROM   Succeeded_1357
+          WHERE  year(success_date) > 2018
+          UNION ALL
+          SELECT fail_date AS dates,
+                 'failed' AS period_state
+          FROM   Failed_1357
+          WHERE  year(fail_date) > 2018),
+         cte2
+AS       (SELECT *,
+                 SUM(new_gropup) OVER (ORDER BY dates) AS catagory
+          FROM   (SELECT *,
+                         CASE WHEN period_state <> COALESCE (previous_state, 'NA') THEN 1 ELSE 0 END AS new_gropup
+                  FROM   (SELECT *,
+                                 lag(period_state) OVER (ORDER BY dates) AS previous_state
+                          FROM   cte) AS t) AS y)
+SELECT   period_state,
+         min(dates) AS start_dates,
+         max(dates) AS end_date
+FROM     cte2
+GROUP BY period_state, catagory;
+
+--1399. Page Recommendations
+-- select * from Friendship_1399 
+-- select * from Likes_1399;
+WITH   cte
+AS     (SELECT user2_id AS friends
+        FROM   Friendship_1399
+        WHERE  user1_id = 1
+        UNION ALL
+        SELECT user1_id AS friends
+        FROM   Friendship_1399
+        WHERE  user2_id = 1),
+       cte2
+AS     (SELECT user_id,
+               page_id
+        FROM   (SELECT *,
+                       row_number() OVER (PARTITION BY page_id ORDER BY user_id) AS rn
+                FROM   Likes_1399) AS t
+        WHERE  rn = 1
+               AND user_id != 1)
+SELECT page_id AS recommended_page
+FROM   cte AS c1
+       LEFT OUTER JOIN
+       cte2 AS c2
+       ON c1.friends = c2.user_id;
+
+-- 1405. All People Report to the Given Manager
+-- select * from Employees_1405
+WITH   CTE
+AS     (SELECT employee_id,
+               manager_id
+        FROM   Employees_1405
+        WHERE  employee_id <> 1
+               AND manager_id = 1
+        UNION ALL
+        SELECT e.employee_id,
+               e.manager_id
+        FROM   Employees_1405 AS e
+               INNER JOIN
+               CTE AS c
+               ON e.manager_id = c.employee_id)
+SELECT employee_id
+FROM   CTE;
+
+-- 1420. Find the Start and End Number of Continuous Ranges ( RUNNING SUM and need to find the groups )
+-- select * from Logs_1420;
+WITH     CTE
+AS       (SELECT *,
+                 sum(CASE WHEN prev_log IS NULL
+                               OR log_id - prev_log > 1 THEN 1 ELSE 0 END) OVER (ORDER BY log_id) AS grp
+          FROM   (SELECT *,
+                         lag(log_id) OVER (ORDER BY log_id) AS prev_log
+                  FROM   Logs_1420) AS t)
+SELECT   min(log_id) AS start_id,
+         max(log_id) AS end_id
+FROM     cte
+GROUP BY grp;
+
+-- 1438. Find the Team Size
+-- select * from Employee_1438
+SELECT   employee_id,
+         count(employee_id) OVER (PARTITION BY team_id) AS team_size
+FROM     Employee_1438
+ORDER BY employee_id;
+
+-- 1481. Students With Invalid Departments
+-- select * from departments_1481
+-- select * from Students_1481
+SELECT s.id,
+       s.name
+FROM   Students_1481 AS s
+       LEFT OUTER JOIN
+       Departments_1481 AS d
+       ON s.department_id = d.id
+WHERE  d.id IS NULL;
+
+-- 1536. Customers Who Bought Products A and B but Not C
+SELECT   c.customer_id,
+         c.customer_name
+FROM     customers_1536 AS c
+         INNER JOIN
+         orders_1536 AS o
+         ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.customer_name
+HAVING   SUM(CASE WHEN o.product_name = 'A' THEN 1 ELSE 0 END) > 0
+         AND SUM(CASE WHEN o.product_name = 'B' THEN 1 ELSE 0 END) > 0
+         AND SUM(CASE WHEN o.product_name = 'C' THEN 1 ELSE 0 END) = 0;
+
+---another Approch -- 
+SELECT   customer_id,
+         customer_name
+FROM     (SELECT *,
+                 dense_rank() OVER (ORDER BY customer_id ASC) AS rn
+          FROM   (SELECT o.customer_id,
+                         c.customer_name,
+                         o.product_name,
+                         count(o.product_name) OVER (PARTITION BY o.customer_id) AS prd_cnt
+                  FROM   orders_1536 AS o
+                         LEFT OUTER JOIN
+                         customers_1536 AS c
+                         ON o.customer_id = c.customer_id
+                  WHERE  product_name IN ('A', 'B', 'C')) AS t
+          WHERE  prd_cnt >= 2) AS k
+WHERE    rn = 2
+GROUP BY customer_id, customer_name;
+
+-- 1541. Top Travellers
+--select * from Users_1541
+--select * from Rides_1541
+SELECT   u.name,
+         sum(distance) AS travelled_distance
+FROM     Users_1541 AS u
+         LEFT OUTER JOIN
+         Rides_1541 AS r
+         ON u.id = r.user_id
+GROUP BY u.name
+ORDER BY travelled_distance DESC, u.name ASC;
+
+-- 1546. Find the Quiet Students in All Exams
+-- select * from Student_1546
+-- select * from Exam_1546
+WITH   cte
+AS     (SELECT *,
+               DENSE_RANK() OVER (PARTITION BY exam_id ORDER BY score) AS rn
+        FROM   Exam_1546),
+       no_need_students
+AS     (SELECT *
+        FROM   (SELECT *,
+                       max(rn) OVER (PARTITION BY exam_id) AS mx_rn
+                FROM   cte) AS t
+        WHERE  rn = 1
+               OR rn = mx_rn)
+SELECT DISTINCT (e.student_id),
+                s.student_name
+FROM   Exam_1546 AS e
+       INNER JOIN
+       Student_1546 AS s
+       ON e.student_id = s.student_id
+WHERE  e.student_id NOT IN (SELECT student_id
+                            FROM   no_need_students);
+
+-- 1565. Evaluate Boolean Expression
+-- select * from Variables_1565
+WITH   cte
+AS     (SELECT *
+        FROM   Expressions_1565 AS e
+               LEFT OUTER JOIN
+               Variables_1565 AS v
+               ON e.left_operand = v.name)
+SELECT left_operand,
+       operator,
+       right_operand,
+       CASE WHEN operator = '>'
+                 AND value_of_x > value_of_y THEN 'true' WHEN operator = '<'
+                                                              AND value_of_x < value_of_y THEN 'true' WHEN operator = '='
+                                                                                                           AND value_of_x = value_of_y THEN 'true' ELSE 'false' END AS vlaue
+FROM   (SELECT c.left_operand AS left_operand,
+               c.operator AS operator,
+               c.right_operand AS right_operand,
+               c.value AS value_of_x,
+               v.value AS value_of_y
+        FROM   cte AS c
+               LEFT OUTER JOIN
+               Variables_1565 AS v
+               ON c.right_operand = v.name) AS t;
+
+-- 1578. Apples & Oranges
+-- select * from Sales_1578 
+WITH   apple_sale
+AS     (SELECT   sale_date,
+                 sum(sold_num) AS apple_sales
+        FROM     Sales_1578
+        WHERE    fruit = 'apples'
+        GROUP BY sale_date),
+       orange_sales
+AS     (SELECT   sale_date,
+                 sum(sold_num) AS orange_sales
+        FROM     Sales_1578
+        WHERE    fruit = 'oranges'
+        GROUP BY sale_date)
+SELECT a.sale_date,
+       (apple_sales - orange_sales) AS diff
+FROM   apple_sale AS a
+       INNER JOIN
+       orange_sales AS o
+       ON a.sale_date = o.sale_date;
+
+-- 1639. Friendly Movies Streamed Last Month
+-- select * from TVProgram_1639 
+-- select * from Content_1639 
+SELECT title
+FROM   (SELECT c.title AS title,
+               DATENAME(MONTH, program_date) AS month_name
+        FROM   TVProgram_1639 AS t
+               LEFT OUTER JOIN
+               Content_1639 AS c
+               ON t.content_id = c.content_id
+        WHERE  DATENAME(MONTH, program_date) = 'June'
+               AND Kids_content = 'Y') AS t;
+
+-- 1641. Countries You Can Safely Invest In
+-- select * from Person_1641 
+-- select * from Country_1641 
+-- select * from Calls_1641 
+WITH   cte
+AS     (SELECT t.id,
+               t.name AS person_name,
+               t.phone_number,
+               c.country_code,
+               c.name AS country_name
+        FROM   (SELECT id,
+                       name,
+                       phone_number,
+                       LEFT(phone_number, CHARINDEX('-', phone_number) - 1) AS country_code
+                FROM   Person_1641) AS t
+               LEFT OUTER JOIN
+               Country_1641 AS c
+               ON t.country_code = c.country_code),
+       calls
+AS     (SELECT caller_id AS id,
+               duration
+        FROM   Calls_1641
+        UNION ALL
+        SELECT callee_id AS id,
+               duration
+        FROM   Calls_1641),
+       all_details
+AS     (SELECT c.id AS id,
+               c.duration AS duration,
+               c2.country_name AS country_name
+        FROM   calls AS c
+               LEFT OUTER JOIN
+               cte AS c2
+               ON c.id = c2.id),
+       final
+AS     (SELECT   avg(duration * 1.0) AS duration,
+                 country_name,
+                 (SELECT (2.0 * sum(duration)) / (2 * count(duration)) AS avg_global
+                  FROM   Calls) AS global_avg
+        FROM     all_details
+        GROUP BY country_name)
+SELECT country_name AS country
+FROM   final
+WHERE  duration > global_avg;
+
+-- 1654. Customer Order Frequency ;
+WITH     cte
+AS       (SELECT o.customer_id AS customer_id,
+                 month(o.order_date) AS order_date,
+                 c.name AS name,
+                 (o.quantity * p.price) AS total_sell
+          FROM   orders_1654 AS o
+                 LEFT OUTER JOIN
+                 Product_1654 AS p
+                 ON o.product_id = p.product_id
+                 LEFT OUTER JOIN
+                 Customers_1654 AS c
+                 ON o.customer_id = c.customer_id
+          WHERE  o.order_date BETWEEN '2020-06-01' AND '2020-07-31'), -- combine the Data
+         cte2
+AS       (SELECT   customer_id,
+                   order_date,
+                   name,
+                   sum(total_sell) AS total
+          FROM     cte
+          GROUP BY customer_id, order_date, name
+          HAVING   sum(total_sell) >= 100) --Filter the data where the total sell is greate thean 100 
+SELECT   customer_id,
+         name
+FROM     cte2
+GROUP BY customer_id, name
+HAVING   count(*) = 2; -- then count the rows which are present in both months 
+
+-- 1671. The Most Recent Three Orders
+--select * from Customers_1671
+--select * from Orders_1671
+WITH     cte
+AS       (SELECT c.name AS customer_name,
+                 o.customer_id AS customer_id,
+                 o.order_id AS order_id,
+                 o.order_date AS order_date
+          FROM   Orders_1671 AS o
+                 LEFT OUTER JOIN
+                 Customers_1671 AS c
+                 ON o.customer_id = c.customer_id)
+SELECT   customer_name,
+         customer_id,
+         order_id,
+         order_date
+FROM     (SELECT *,
+                 ROW_NUMBER() OVER (PARTITION BY customer_name ORDER BY order_date DESC) AS rn
+          FROM   cte) AS t
+WHERE    rn <= 3
+ORDER BY customer_name ASC, customer_id ASC, order_date DESC;
+
+-- 1688. The Most Recent Orders for Each Product
+-- select * from Products_1688
+-- select * from Orders_1688
+WITH   cte
+AS     (SELECT p.product_name AS product_name,
+               p.product_id AS product_id,
+               o.order_id AS order_id,
+               o.order_date AS order_date
+        FROM   Orders_1688 AS o
+               LEFT OUTER JOIN
+               Products_1688 AS p
+               ON o.product_id = p.product_id)
+SELECT product_name,
+       product_id,
+       order_id,
+       order_date
+FROM   (SELECT product_name,
+               product_id,
+               order_id,
+               order_date,
+               dense_rank() OVER (PARTITION BY product_name ORDER BY order_date DESC) AS rn
+        FROM   cte) AS t
+WHERE  rn = 1;
+
+-- 1718. Warehouse Manager
+--select * from Warehouse_1718 
+--select * from Products_1718
+WITH     products
+AS       (SELECT product_id,
+                 product_name,
+                 (width * Length * Height) AS volume
+          FROM   Products_1718)
+SELECT   w.name AS warehouse_name,
+         sum(volume * units) AS volume
+FROM     Warehouse_1718 AS w
+         LEFT OUTER JOIN
+         products AS p
+         ON w.product_id = p.product_id
+GROUP BY w.name;
+
+-- 1734. Bank Account Summary II
+--select * from Users_1734 
+--select * from Transactions_1734 
+WITH   cte
+AS     (SELECT t.trans_id,
+               t.account,
+               t.amount,
+               t.transacted_on,
+               u.name
+        FROM   Transactions_1734 AS t
+               LEFT OUTER JOIN
+               Users_1734 AS u
+               ON t.account = u.account)
+SELECT name,
+       balance
+FROM   (SELECT   account,
+                 name,
+                 sum(amount) AS balance
+        FROM     cte
+        GROUP BY account, name) AS t
+WHERE  balance > 10000;
+
+-- 1735. The Most Frequently Ordered Products for Each Customer
+--select  * from Customers_1735 
+--select * from Orders_1735 
+--select * from Products_1735 
+WITH   cte
+AS     (SELECT o.order_id AS order_id,
+               o.order_date AS order_date,
+               o.customer_id AS customer_id,
+               o.product_id AS product_id,
+               c.name AS cs_name,
+               p.product_name AS product_name
+        FROM   Orders_1735 AS o
+               LEFT OUTER JOIN
+               Customers_1735 AS c
+               ON o.customer_id = c.customer_id
+               LEFT OUTER JOIN
+               Products_1735 AS p
+               ON o.product_id = p.product_id)
+SELECT customer_id,
+       product_id,
+       product_name
+FROM   (SELECT customer_id,
+               product_id,
+               product_name,
+               prd_cnt,
+               dense_rank() OVER (PARTITION BY customer_id ORDER BY prd_cnt DESC) AS rn
+        FROM   (SELECT   customer_id,
+                         product_id,
+                         product_name,
+                         count(product_name) AS prd_cnt
+                FROM     cte
+                GROUP BY customer_id, product_id, product_name) AS t) AS y
+WHERE  rn = 1;
+
+-- 1749. Sellers With No Sales
+--select * from orders_1749
+--select * from Seller_1749 
+SELECT s.seller_name
+FROM   Orders_1749 AS o
+       LEFT OUTER JOIN
+       Seller_1749 AS s
+       ON o.seller_id = s.seller_id
+WHERE  o.seller_id NOT IN (SELECT seller_id
+                           FROM   orders_1749
+                           WHERE  sale_date BETWEEN '2020-01-01' AND '2020-12-31');
+
+-- 1837. Daily Leads and Partners
+--select * from DailySales_1837 
+SELECT   date_id,
+         make_name,
+         count(DISTINCT (lead_id)) AS unique_leads,
+         count(DISTINCT (partner_id)) AS unique_partners
+FROM     DailySales_1837
+GROUP BY make_name, date_id
+ORDER BY make_name DESC, date_id DESC;
+
+-- 1842. Number of Calls Between Two Persons
+--select * from Calls_1842 
+WITH     cte
+AS       (SELECT from_id,
+                 to_id,
+                 duration,
+                 CASE WHEN from_id < to_id THEN from_id ELSE to_id END AS person1,
+                 CASE WHEN to_id > from_id THEN to_id ELSE from_id END AS person2
+          FROM   Calls_1842)
+SELECT   person1,
+         person2,
+         call_count,
+         sum(duration) AS total_duration
+FROM     (SELECT person1,
+                 person2,
+                 duration,
+                 count(duration) OVER (PARTITION BY person1, person2) AS call_count
+          FROM   cte) AS t
+GROUP BY person1, person2, call_count;
+
+-- 1852. Biggest Window Between Visits
+-- select * from UserVisits_1852
+SELECT   user_id,
+         max(windows) AS biggest_window
+FROM     (SELECT *,
+                 datediff(day, visit_date, prv_date) AS windows
+          FROM   (SELECT user_id,
+                         visit_date,
+                         COALESCE (lead(visit_date) OVER (ORDER BY visit_date), '2021-1-1') AS prv_date
+                  FROM   UserVisits_1852
+                  WHERE  user_id = 1) AS t) AS r
+GROUP BY user_id
+UNION ALL
+SELECT   user_id,
+         max(windows) AS biggest_window
+FROM     (SELECT *,
+                 datediff(day, visit_date, prv_date) AS windows
+          FROM   (SELECT user_id,
+                         visit_date,
+                         COALESCE (lead(visit_date) OVER (ORDER BY visit_date), '2021-1-1') AS prv_date
+                  FROM   UserVisits_1852
+                  WHERE  user_id = 2) AS t) AS r
+GROUP BY user_id
+UNION ALL
+SELECT   user_id,
+         max(windows) AS biggest_window
+FROM     (SELECT *,
+                 datediff(day, visit_date, prv_date) AS windows
+          FROM   (SELECT user_id,
+                         visit_date,
+                         COALESCE (lead(visit_date) OVER (ORDER BY visit_date), '2021-1-1') AS prv_date
+                  FROM   UserVisits_1852
+                  WHERE  user_id = 3) AS t) AS r
+GROUP BY user_id;
+
+-- 1892. Find Total Time Spent by Each Employee
+-- select * from Employees_1892 
+SELECT   emp_id,
+         event_day,
+         sum(times) AS total_time
+FROM     (SELECT emp_id,
+                 event_day,
+                 (out_time - in_time) AS times
+          FROM   Employees_1892) AS t
+GROUP BY emp_id, event_day;
+
+-- 1898. Leetflex Banned Accounts
+-- select * from LogInfo_1898 
+SELECT DISTINCT *
+FROM   LogInfo_1898 AS a
+       INNER JOIN
+       LogInfo_1898 AS b
+       ON a.account_id = b.account_id
+WHERE  a.ip_address <> b.ip_address
+       AND a.login <= b.logout
+       AND b.login <= a.logout;
+
+-- 914. Find the Subtasks That Did Not Execute
+--select * from Tasks_1914 -- USE of Recursive CTE --
+WITH     cte
+AS       (SELECT task_id,
+                 subtasks_count,
+                 1 AS subtasks_id
+          FROM   Tasks_1914
+          UNION ALL
+          SELECT task_id,
+                 subtasks_count,
+                 subtasks_id + 1
+          FROM   cte
+          WHERE  subtasks_id < subtasks_count)
+SELECT   c.task_id,
+         c.subtasks_id
+FROM     cte AS c
+         LEFT OUTER JOIN
+         Executed_1914 AS e
+         ON c.task_id = e.task_id
+            AND c.subtasks_id = e.subtask_id
+WHERE    e.task_id IS NULL
+         AND e.subtask_id IS NULL
+ORDER BY task_id, subtasks_id;
+
+-- 1932. Grand Slam Titles
+--select * from Players_1932 
+--select * from Championships_1932 
+WITH     cte
+AS       (SELECT year,
+                 Wimbledon AS slams
+          FROM   Championships_1932
+          UNION ALL
+          SELECT year,
+                 Fr_open AS slams
+          FROM   Championships_1932
+          UNION ALL
+          SELECT year,
+                 US_open AS slams
+          FROM   Championships_1932
+          UNION ALL
+          SELECT year,
+                 Au_open AS slams
+          FROM   Championships_1932)
+SELECT   p.player_id AS player_id,
+         p.player_name AS player_name,
+         count(player_id) AS grand_slams_count
+FROM     cte AS c
+         LEFT OUTER JOIN
+         Players_1932 AS p
+         ON c.slams = p.player_id
+GROUP BY player_id, player_name;
+
+-- 1948. Rearrange Products Table
+--select * from Products_1948
+SELECT   product_id,
+         'store1' AS store,
+         store1 AS price
+FROM     Products_1948
+UNION ALL
+SELECT   product_id,
+         'store2' AS store,
+         store2 AS price
+FROM     Products_1948
+WHERE    store2 IS NOT NULL
+UNION ALL
+SELECT   product_id,
+         'store3' AS store,
+         store3 AS price
+FROM     Products_1948
+ORDER BY product_id, store;
+
+-- 1974. Find Customers With Positive Revenue this Year
+--select * from Customers_1974
+SELECT customer_id
+FROM   Customers_1974
+WHERE  year = 2021
+       AND revenue > 0;
+
+-- 1981. Maximum Transaction Each Day
+--select * from Transactions_1981
+WITH     Transactions
+AS       (SELECT transaction_id,
+                 CAST (day AS DATE) AS dayss,
+                 amount
+          FROM   Transactions_1981)
+SELECT   transaction_id
+FROM     (SELECT transaction_id,
+                 dayss,
+                 amount,
+                 dense_rank() OVER (PARTITION BY dayss ORDER BY amount DESC) AS rn
+          FROM   Transactions) AS t
+WHERE    rn = 1
+ORDER BY transaction_id;
+
+-- 2024. Calculate Special Bonus
+--select * from Employees_2024
+SELECT employee_id,
+       CASE WHEN (employee_id % 2 = 0)
+                 OR name LIKE 'M%' THEN 0 ELSE salary END AS bonus
+FROM   Employees_2024;
+
+-- 2041. The Latest Login in 2020
+--select * from  Logins_2041
+WITH     logins
+AS       (SELECT user_id,
+                 time_stamp
+          FROM   Logins_2041
+          WHERE  year(time_stamp) = 2020)
+SELECT   user_id,
+         max(time_stamp) AS last_stamp
+FROM     logins
+GROUP BY user_id;
+
+-- 2110. Employees With Missing Information
+--select * from Employees_2110
+--select * from Salaries_2110
+WITH     cte
+AS       (SELECT e.employee_id AS emp1,
+                 s.employee_id AS emp2
+          FROM   Employees_2110 AS e
+                 FULL OUTER JOIN
+                 Salaries_2110 AS s
+                 ON e.employee_id = s.employee_id)
+SELECT   emp1 AS employee_id
+FROM     cte
+WHERE    emp2 IS NULL
+UNION ALL
+SELECT   emp2 AS employee_id
+FROM     cte
+WHERE    emp1 IS NULL
+ORDER BY employee_id;
