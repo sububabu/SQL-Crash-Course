@@ -110,8 +110,7 @@ FROM   Point_0613 AS p1
 
 --1136. Actors and Directors Who Cooperated At Least Three Times
 -- SELECT * from ActorDirector_1136
-SELECT   actor_id,
-         director_id
+SELECT   actor_id,director_id
 FROM     (SELECT *,
                  count([timestamp]) OVER (PARTITION BY actor_id, director_id) AS count_times
           FROM   ActorDirector_1136) AS t
@@ -817,7 +816,7 @@ SELECT   product_id,
 FROM     Products_1948
 ORDER BY product_id, store;
 
--- 1974. Find Customers With Positive Revenue this Year
+-- 1974. Find Customers With Positive Revenue this Year -- this thing needs action some time so we need to add the temp file--
 --select * from Customers_1974
 SELECT customer_id
 FROM   Customers_1974
